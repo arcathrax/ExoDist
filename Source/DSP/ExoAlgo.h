@@ -7,8 +7,8 @@ template <typename SampleType> class ExoAlgo
 {
 public:
 	// algorithm functions
-	float normalizeBetweenThresholds(float rawInput, float softenTreshold, float hardTreshold);
-	float applySinusoidalClip(float inputValue, float scaleFactor, float maxThreshold);
+	SampleType normalizeBetweenThresholds(SampleType rawInput, SampleType softenTreshold, SampleType hardTreshold);
+	SampleType applySinusoidalClip(SampleType inputValue, SampleType scaleFactor, SampleType maxThreshold);
 
 	// processor chain functions
 	void prepare(const juce::dsp::ProcessSpec& spec) noexcept;
@@ -17,8 +17,8 @@ public:
 	void process(const ProcessContext& context);
 
 	// update variable functions
-	void setMaxThreshold(float newMaxThreshold);
-	void setScalingFactor(float newScalingFactor);
+	void setMaxThreshold(SampleType newMaxThreshold);
+	void setScalingFactor(SampleType newScalingFactor);
 
 private:
 	// default variables
@@ -26,4 +26,5 @@ private:
 	SampleType maxThreshold = 1.0; // Reset to a default
 	SampleType scalingFactor = 1.0; // Reset to a default
 };
+
 #endif

@@ -10,6 +10,7 @@
 
 #include <JuceHeader.h>
 #include "DSP/ExoAlgo.h"
+#include "DSP/ExoChain.h"
 
 //==============================================================================
 /**
@@ -60,6 +61,8 @@ public:
 
 
 private:
+    ExoChain exoChain;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ExoDistAudioProcessor);
 };

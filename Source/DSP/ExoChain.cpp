@@ -33,7 +33,7 @@ void ExoChain::prepare(const juce::dsp::ProcessSpec& spec)
 };
 
 template <typename ProcessContext>
-void ExoChain::process(const ProcessContext& context) noexcept
+void ExoChain::process(const ProcessContext& context)
 {
     processorChain.process(context);
 }
@@ -42,5 +42,5 @@ void ExoChain::updateDistortion(float newMaxThreshold, float newScalingFactor)
 {
     auto& distortion = processorChain.template get<distortionIndex>();
     distortion.setMaxThreshold(newMaxThreshold);
-    distortion.setScalingFactor(newMaxThreshold);
+    distortion.setScalingFactor(newScalingFactor);
 };

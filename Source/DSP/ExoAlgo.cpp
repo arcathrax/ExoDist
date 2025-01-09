@@ -4,10 +4,10 @@
 #include <cmath>
 
 template <typename SampleType>
-float ExoAlgo<SampleType>::normalizeBetweenThresholds(float input, float softenTreshold, float hardTreshold) {
-    float tresholdDifference;
-    float adjustedInput;
-    float output;
+SampleType ExoAlgo<SampleType>::normalizeBetweenThresholds(SampleType input, SampleType softenTreshold, SampleType hardTreshold) {
+    SampleType tresholdDifference;
+    SampleType adjustedInput;
+    SampleType output;
 
     tresholdDifference = hardTreshold - softenTreshold;
     adjustedInput = input - softenTreshold;
@@ -17,9 +17,9 @@ float ExoAlgo<SampleType>::normalizeBetweenThresholds(float input, float softenT
 };
 
 template <typename SampleType>
-float ExoAlgo<SampleType>::applySinusoidalClip(float inputValue, float scalingFactor, float maxThreshold)
+SampleType ExoAlgo<SampleType>::applySinusoidalClip(SampleType inputValue, SampleType scalingFactor, SampleType maxThreshold)
 {
-    float finalOutput;
+    SampleType finalOutput;
     bool isInputNegative = inputValue < 0;
     inputValue = std::abs(inputValue);
 
@@ -28,12 +28,12 @@ float ExoAlgo<SampleType>::applySinusoidalClip(float inputValue, float scalingFa
     if (inputValue >= scalingFactor)
     {
 
-        float thresholdDifference = maxThreshold - scalingFactor;
-        float linearValue = normalizeBetweenThresholds(inputValue, scalingFactor, maxThreshold);
+        SampleType thresholdDifference = maxThreshold - scalingFactor;
+        SampleType linearValue = normalizeBetweenThresholds(inputValue, scalingFactor, maxThreshold);
 
         if (linearValue < M_PI / 2)
         {
-            float adjustedOutput = sin(linearValue) * thresholdDifference;
+            SampleType adjustedOutput = sin(linearValue) * thresholdDifference;
             finalOutput = adjustedOutput + scalingFactor;
         }
         else
@@ -94,13 +94,13 @@ void ExoAlgo<SampleType>::process(const ProcessContext& context)
 }
 
 template <typename SampleType>
-void ExoAlgo<SampleType>::setMaxThreshold(float newMaxThreshold)
+void ExoAlgo<SampleType>::setMaxThreshold(SampleType newMaxThreshold)
 {
     this->maxThreshold = newMaxThreshold;
 };
 
 template <typename SampleType>
-void ExoAlgo<SampleType>::setScalingFactor(float newScalingFactor)
+void ExoAlgo<SampleType>::setScalingFactor(SampleType newScalingFactor)
 {
     this->scalingFactor = newScalingFactor;
 };

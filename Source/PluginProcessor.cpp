@@ -134,8 +134,13 @@ bool ExoDistAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 
 void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    auto numChannels = buffer.getNumChannels();
-    auto numSamples = buffer.getNumSamples();
+    float maxThreshold = *apvts.getRawParameterValue("maxThreshold");
+    float scalingFactor = *apvts.getRawParameterValue("Hardness");
+
+    exoChain.updateDistortion(maxThreshold, scalingFactor);
+
+    juce::dsp::ProcessContextReplacing<float> context(juce::dsp::AudioBlock<float>(buffer));
+    exoChain.process(context);
 }
 
 
