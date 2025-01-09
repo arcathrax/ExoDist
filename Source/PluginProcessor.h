@@ -62,14 +62,4 @@ public:
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ExoDistAudioProcessor);
-
-    ExoAlgo exoAlgo;
-    float newSample;
-    float previousPreGain;
-    float preGain;
-    float previousPostGain;
-    float postGain;
-    float hct;
-    float hardness;
-    float d;
 };

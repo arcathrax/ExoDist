@@ -98,9 +98,6 @@ void ExoDistAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = 1;
     spec.sampleRate = sampleRate;
-    
-    previousPreGain = drive;
-    previousPostGain = postGain;
 }
 
 void ExoDistAudioProcessor::releaseResources()
@@ -139,45 +136,6 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 {
     auto numChannels = buffer.getNumChannels();
     auto numSamples = buffer.getNumSamples();
-
-    drive = *apvts.getRawParameterValue("Drive");
-    postGain = *apvts.getRawParameterValue("Post Gain");
-    hct = *apvts.getRawParameterValue("Treshold");
-    hardness = *apvts.getRawParameterValue("Hardness");
-
-    auto currentPreGain = drive;
-    if (juce::approximatelyEqual(currentPreGain, previousPreGain))
-    {
-        buffer.applyGain(currentPreGain);
-    }
-    else
-    {
-        buffer.applyGainRamp(0, numSamples, previousPreGain, currentPreGain);
-        previousPreGain = currentPreGain;
-    }
-
-    for (int channel = 0; channel < numChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer(channel);
-
-        for (int sample = 0; sample < numSamples; ++sample)
-        {
-            float currentSample = channelData[sample];
-            newSample = exoAlgo.hardWerid(currentSample, hardness);
-            channelData[sample] = newSample;
-        }
-    }
-
-    auto currentPostGain = postGain;
-    if (juce::approximatelyEqual(currentPostGain, previousPostGain))
-    {
-        buffer.applyGain(currentPostGain);
-    }
-    else
-    {
-        buffer.applyGainRamp(0, numSamples, previousPostGain, currentPostGain);
-        previousPostGain = currentPostGain;
-    }
 }
 
 
@@ -253,8 +211,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     (
         std::make_unique<juce::AudioParameterFloat>
         (
-            "Treshold",
-            "Treshold",
+            "maxThreshold",
+            "maxThreshold",
             juce::NormalisableRange<float>
             (
                 0.01f,
@@ -262,7 +220,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
                 0.000001f,
                 1.0f
             ),
-            0.75f
+            1.0f
         )
     );
 
@@ -275,7 +233,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             "Hardness",
             juce::NormalisableRange<float>
             (
-                0.0f,
+                -2.0f,
                 1.0f,
                 0.000001f,
                 1.0f
@@ -294,7 +252,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             juce::NormalisableRange<float>
             (
                 0.0f,
-                4.0f,
+                2.0f,
                 0.000001f,
                 0.25f
             ),
