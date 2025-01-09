@@ -10,6 +10,8 @@
       <GROUP id="{1C83E6E9-F158-5067-4222-E8D43A293597}" name="DSP">
         <FILE id="LI2LSK" name="ExoAlgo.cpp" compile="1" resource="0" file="Source/DSP/ExoAlgo.cpp"/>
         <FILE id="DAYiUi" name="ExoAlgo.h" compile="0" resource="0" file="Source/DSP/ExoAlgo.h"/>
+        <FILE id="o8G5MH" name="ExoChain.cpp" compile="1" resource="0" file="Source/DSP/ExoChain.cpp"/>
+        <FILE id="hBoCK3" name="ExoChain.h" compile="0" resource="0" file="Source/DSP/ExoChain.h"/>
       </GROUP>
       <FILE id="Mi8ARL" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
