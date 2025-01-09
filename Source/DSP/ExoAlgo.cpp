@@ -104,3 +104,7 @@ void ExoAlgo<SampleType>::setScalingFactor(SampleType newScalingFactor)
 {
     this->scalingFactor = newScalingFactor;
 };
+
+// Explizite Instanziierung für SampleType = float
+template class ExoAlgo<float>;
+template void ExoAlgo<float>::process<juce::dsp::ProcessContextReplacing<float>>(const juce::dsp::ProcessContextReplacing<float>& context);

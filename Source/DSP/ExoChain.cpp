@@ -17,12 +17,12 @@ ExoChain::ExoChain()
 
     preGain.setGainDecibels(10.0f);
     postGain.setGainDecibels(-10.0f);
-};
+}
 
 void ExoChain::reset() noexcept
 {
     processorChain.reset();
-};
+}
 
 void ExoChain::prepare(const juce::dsp::ProcessSpec& spec)
 {
@@ -30,7 +30,7 @@ void ExoChain::prepare(const juce::dsp::ProcessSpec& spec)
     filter.state = FilterCoefs::makeFirstOrderLowPass(spec.sampleRate, 5000.0f);
 
     processorChain.prepare(spec);
-};
+}
 
 template <typename ProcessContext>
 void ExoChain::process(const ProcessContext& context)
@@ -38,9 +38,12 @@ void ExoChain::process(const ProcessContext& context)
     processorChain.process(context);
 }
 
+// Spezifische Instanziierung der Template-Methode für ProcessContextReplacing<float>
+template void ExoChain::process<juce::dsp::ProcessContextReplacing<float>>(const juce::dsp::ProcessContextReplacing<float>& context);
+
 void ExoChain::updateDistortion(float newMaxThreshold, float newScalingFactor)
 {
     auto& distortion = processorChain.template get<distortionIndex>();
     distortion.setMaxThreshold(newMaxThreshold);
     distortion.setScalingFactor(newScalingFactor);
-};
+}
