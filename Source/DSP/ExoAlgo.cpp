@@ -58,12 +58,15 @@ template <typename SampleType>
 void ExoAlgo<SampleType>::prepare(const juce::dsp::ProcessSpec& spec) noexcept
 {
     sampleRate = static_cast<SampleType>(spec.sampleRate);
+    maxThreshold = 1.0;  // Reset to a default
+    scalingFactor = 1.0; // Reset to a default
 };
 
 template <typename SampleType>
 void ExoAlgo<SampleType>::reset() 
 {
-
+    maxThreshold = 1.0;
+    scalingFactor = 0.5;
 };
 
 template <typename SampleType>
@@ -89,3 +92,15 @@ void ExoAlgo<SampleType>::process(const ProcessContext& context)
         }
     }
 }
+
+template <typename SampleType>
+void ExoAlgo<SampleType>::setMaxThreshold(float newMaxThreshold)
+{
+    this->maxThreshold = newMaxThreshold;
+};
+
+template <typename SampleType>
+void ExoAlgo<SampleType>::setScalingFactor(float newScalingFactor)
+{
+    this->scalingFactor = newScalingFactor;
+};
