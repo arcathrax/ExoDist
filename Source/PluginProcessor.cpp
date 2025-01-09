@@ -99,7 +99,7 @@ void ExoDistAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     spec.numChannels = 1;
     spec.sampleRate = sampleRate;
     
-    previousPreGain = preGain;
+    previousPreGain = drive;
     previousPostGain = postGain;
 }
 
@@ -140,12 +140,12 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     auto numChannels = buffer.getNumChannels();
     auto numSamples = buffer.getNumSamples();
 
-    preGain = *apvts.getRawParameterValue("Pre Gain");
+    drive = *apvts.getRawParameterValue("Drive");
     postGain = *apvts.getRawParameterValue("Post Gain");
     hct = *apvts.getRawParameterValue("Treshold");
     hardness = *apvts.getRawParameterValue("Hardness");
 
-    auto currentPreGain = preGain;
+    auto currentPreGain = drive;
     if (juce::approximatelyEqual(currentPreGain, previousPreGain))
     {
         buffer.applyGain(currentPreGain);

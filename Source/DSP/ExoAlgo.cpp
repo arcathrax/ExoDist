@@ -3,61 +3,51 @@
 #include "ExoAlgo.h"
 #include <cmath>
 
+float Algorythm::normalizeBetweenThresholds(float input, float softenTreshold, float hardTreshold) {
+    float tresholdDifference;
+    float adjustedInput;
+    float output;
 
-float ExoAlgo::getLinearValue(float input, float sct, float hct)
-{
-    tDiff = hct - sct;
-    adjInput = input - sct;
-    output = adjInput / tDiff;
+    tresholdDifference = hardTreshold - softenTreshold;
+    adjustedInput = input - softenTreshold;
+    output = adjustedInput / tresholdDifference;
+
     return output;
-}
+};
 
-float ExoAlgo::sinClip(float input, float sct, float hct)
+float Algorythm::applySinusoidalClip(float inputValue, float scalingFactor, float maxThreshold)
 {
-    bool isNegative = input < 0;
-    input = std::abs(input);
+    float finalOutput;
+    bool isInputNegative = inputValue < 0;
+    inputValue = std::abs(inputValue);
 
-    sct = hct * sct;
+    scalingFactor = maxThreshold * scalingFactor;
 
-    if (input >= sct)
+    if (inputValue >= scalingFactor)
     {
-        tDiff = hct - sct;
-        linearOutput = getLinearValue(input, sct, hct);
 
-        if (linearOutput < M_PI / 2)
+        float thresholdDifference = maxThreshold - scalingFactor;
+        float linearValue = normalizeBetweenThresholds(inputValue, scalingFactor, maxThreshold);
+
+        if (linearValue < M_PI / 2)
         {
-            adjOutput = sin(linearOutput) * tDiff;
-            realOutput = adjOutput + sct;
+            float adjustedOutput = sin(linearValue) * thresholdDifference;
+            finalOutput = adjustedOutput + scalingFactor;
         }
         else
         {
-            realOutput = hct;
+            finalOutput = maxThreshold;
         }
     }
     else
     {
-        realOutput = input;
+        finalOutput = inputValue;
     }
 
-    // Spiegelung für negative Eingabewerte
-    if (isNegative)
+    if (isInputNegative)
     {
-        realOutput = -realOutput;
+        finalOutput = -finalOutput;
     }
 
-    return realOutput;
-}
-
-float ExoAlgo::softWeird(float input, float d)
-{
-    float a = (sin(input) / 2) * d;
-
-    return atan(input * d * pow(a, 2));
-}
-
-float ExoAlgo::hardWerid(float input, float d)
-{
-    float a = (sin(input) / 2) * d;
-
-    return tanh(input * 4 * d * pow(a,2));
+    return finalOutput;
 }
