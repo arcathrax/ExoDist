@@ -98,6 +98,12 @@ void ExoDistAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = 1;
     spec.sampleRate = sampleRate;
+    
+    previousPreGain = preGain;
+    previousPostGain = postGain;
+
+    exoAlgo.setScaleFactor(scaleFactor);
+    exoAlgo.setMaxThreshold(maxThreshold);
 }
 
 void ExoDistAudioProcessor::releaseResources()
@@ -137,10 +143,46 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     float maxThreshold = *apvts.getRawParameterValue("maxThreshold");
     float scalingFactor = *apvts.getRawParameterValue("Hardness");
 
-    exoChain.updateDistortion(maxThreshold, scalingFactor);
+    preGain = *apvts.getRawParameterValue("Pre Gain");
+    postGain = *apvts.getRawParameterValue("Post Gain");
+    maxThreshold = *apvts.getRawParameterValue("Max Threshold");
+    scaleFactor = *apvts.getRawParameterValue("Scale Factor");
 
-    juce::dsp::ProcessContextReplacing<float> context(juce::dsp::AudioBlock<float>(buffer));
-    exoChain.process(context);
+    auto currentPreGain = preGain;
+    if (juce::approximatelyEqual(currentPreGain, preGain))
+    {
+        buffer.applyGain(currentPreGain);
+    }
+    else
+    {
+        buffer.applyGainRamp(0, numSamples, preGain, currentPreGain);
+        preGain = currentPreGain;
+    }
+
+    for (int channel = 0; channel < numChannels; ++channel)
+    {
+        auto* channelData = buffer.getWritePointer(channel);
+
+        for (int sample = 0; sample < numSamples; ++sample)
+        {
+            float currentSample = channelData[sample];
+            exoAlgo.setScaleFactor(scaleFactor);
+            exoAlgo.setMaxThreshold(maxThreshold);
+            newSample = exoAlgo.process(currentSample);
+            channelData[sample] = newSample;
+        }
+    }
+
+    auto currentPostGain = postGain;
+    if (juce::approximatelyEqual(currentPostGain, previousPostGain))
+    {
+        buffer.applyGain(currentPostGain);
+    }
+    else
+    {
+        buffer.applyGainRamp(0, numSamples, previousPostGain, currentPostGain);
+        previousPostGain = currentPostGain;
+    }
 }
 
 
@@ -216,8 +258,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     (
         std::make_unique<juce::AudioParameterFloat>
         (
-            "maxThreshold",
-            "maxThreshold",
+            "Max Threshold",
+            "Max Threshold",
             juce::NormalisableRange<float>
             (
                 0.01f,
@@ -234,8 +276,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     (
         std::make_unique<juce::AudioParameterFloat>
         (
-            "Hardness",
-            "Hardness",
+            "Scale Factor",
+            "Scale Factor",
             juce::NormalisableRange<float>
             (
                 -2.0f,
