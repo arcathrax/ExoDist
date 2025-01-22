@@ -15,13 +15,13 @@ float ExoAlgo::normalizeBetweenThresholds(float input, float softenThreshold, fl
     return output;
 };
 
-float ExoAlgo::applySinusoidalClip(float inputValue, float scalingFactor, float maxThreshold)
+float ExoAlgo::applySinusoidalClip(float inputValue)
 {
     float finalOutput;
     bool isInputNegative = inputValue < 0;
     inputValue = std::abs(inputValue);
 
-    softenThreshold = maxThreshold * scalingFactor;
+    softenThreshold = maxThreshold * scaleFactor;
 
     if (inputValue >= softenThreshold)
     {
@@ -50,4 +50,14 @@ float ExoAlgo::applySinusoidalClip(float inputValue, float scalingFactor, float 
     }
 
     return finalOutput;
+}
+
+void ExoAlgo::setScaleFactor(float newScaleFactor)
+{
+    this->scaleFactor = newScaleFactor;
+}
+
+void ExoAlgo::setMaxThreshold(float newMaxThreshold)
+{
+    this->maxThreshold = newMaxThreshold;
 }

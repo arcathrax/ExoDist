@@ -69,7 +69,7 @@ private:
     float preGain;
     float previousPostGain;
     float postGain;
-    float hct;
-    float hardness;
+    float maxThreshold;
+    float scaleFactor;
     float d;
 };

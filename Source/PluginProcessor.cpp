@@ -101,6 +101,9 @@ void ExoDistAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     
     previousPreGain = preGain;
     previousPostGain = postGain;
+
+    exoAlgo.setScaleFactor(scaleFactor);
+    exoAlgo.setMaxThreshold(maxThreshold);
 }
 
 void ExoDistAudioProcessor::releaseResources()
@@ -142,8 +145,8 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
     preGain = *apvts.getRawParameterValue("Pre Gain");
     postGain = *apvts.getRawParameterValue("Post Gain");
-    hct = *apvts.getRawParameterValue("Treshold");
-    hardness = *apvts.getRawParameterValue("Hardness");
+    maxThreshold = *apvts.getRawParameterValue("Max Threshold");
+    scaleFactor = *apvts.getRawParameterValue("Scale Factor");
 
     auto currentPreGain = preGain;
     if (juce::approximatelyEqual(currentPreGain, preGain))
@@ -163,7 +166,9 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
         for (int sample = 0; sample < numSamples; ++sample)
         {
             float currentSample = channelData[sample];
-            newSample = exoAlgo.applySinusoidalClip(currentSample, hardness, hct);
+            exoAlgo.setScaleFactor(scaleFactor);
+            exoAlgo.setMaxThreshold(maxThreshold);
+            newSample = exoAlgo.applySinusoidalClip(currentSample);
             channelData[sample] = newSample;
         }
     }
@@ -190,8 +195,8 @@ bool ExoDistAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* ExoDistAudioProcessor::createEditor()
 {
-    return new ExoDistAudioProcessorEditor (*this);
-    // return new juce::GenericAudioProcessorEditor(*this);
+    // return new ExoDistAudioProcessorEditor (*this);
+    return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
@@ -253,8 +258,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     (
         std::make_unique<juce::AudioParameterFloat>
         (
-            "Treshold",
-            "Treshold",
+            "Max Threshold",
+            "Max Threshold",
             juce::NormalisableRange<float>
             (
                 0.01f,
@@ -271,8 +276,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     (
         std::make_unique<juce::AudioParameterFloat>
         (
-            "Hardness",
-            "Hardness",
+            "Scale Factor",
+            "Scale Factor",
             juce::NormalisableRange<float>
             (
                 0.0f,
