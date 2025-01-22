@@ -1,9 +1,19 @@
 #ifndef EXOALGO_H
 #define EXOALGO_H
-class Algorythm
+class ExoAlgo
 {
 public:
-	float normalizeBetweenThresholds(float rawInput, float softenTreshold, float hardTreshold);
+	// variables
+
+	//functions
 	float applySinusoidalClip(float inputValue, float scaleFactor, float maxThreshold);
+private:
+	// variables
+	float scaleFactor;
+	float maxThreshold;
+	float softenThreshold;
+
+	// functions
+	float normalizeBetweenThresholds(float rawInput, float softenTreshold, float hardTreshold);
 };
 #endif

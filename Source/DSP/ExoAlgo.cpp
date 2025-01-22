@@ -3,36 +3,36 @@
 #include "ExoAlgo.h"
 #include <cmath>
 
-float Algorythm::normalizeBetweenThresholds(float input, float softenTreshold, float hardTreshold) {
+float ExoAlgo::normalizeBetweenThresholds(float input, float softenThreshold, float hardThreshold) {
     float tresholdDifference;
     float adjustedInput;
     float output;
 
-    tresholdDifference = hardTreshold - softenTreshold;
-    adjustedInput = input - softenTreshold;
+    tresholdDifference = hardThreshold - softenThreshold;
+    adjustedInput = input - softenThreshold;
     output = adjustedInput / tresholdDifference;
 
     return output;
 };
 
-float Algorythm::applySinusoidalClip(float inputValue, float scalingFactor, float maxThreshold)
+float ExoAlgo::applySinusoidalClip(float inputValue, float scalingFactor, float maxThreshold)
 {
     float finalOutput;
     bool isInputNegative = inputValue < 0;
     inputValue = std::abs(inputValue);
 
-    scalingFactor = maxThreshold * scalingFactor;
+    softenThreshold = maxThreshold * scalingFactor;
 
-    if (inputValue >= scalingFactor)
+    if (inputValue >= softenThreshold)
     {
 
-        float thresholdDifference = maxThreshold - scalingFactor;
-        float linearValue = normalizeBetweenThresholds(inputValue, scalingFactor, maxThreshold);
+        float thresholdDifference = maxThreshold - softenThreshold;
+        float linearValue = normalizeBetweenThresholds(inputValue, softenThreshold, maxThreshold);
 
         if (linearValue < M_PI / 2)
         {
             float adjustedOutput = sin(linearValue) * thresholdDifference;
-            finalOutput = adjustedOutput + scalingFactor;
+            finalOutput = adjustedOutput + softenThreshold;
         }
         else
         {

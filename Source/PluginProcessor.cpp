@@ -99,7 +99,7 @@ void ExoDistAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     spec.numChannels = 1;
     spec.sampleRate = sampleRate;
     
-    previousPreGain = drive;
+    previousPreGain = preGain;
     previousPostGain = postGain;
 }
 
@@ -140,20 +140,20 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     auto numChannels = buffer.getNumChannels();
     auto numSamples = buffer.getNumSamples();
 
-    drive = *apvts.getRawParameterValue("Drive");
+    preGain = *apvts.getRawParameterValue("Pre Gain");
     postGain = *apvts.getRawParameterValue("Post Gain");
     hct = *apvts.getRawParameterValue("Treshold");
     hardness = *apvts.getRawParameterValue("Hardness");
 
-    auto currentPreGain = drive;
-    if (juce::approximatelyEqual(currentPreGain, previousPreGain))
+    auto currentPreGain = preGain;
+    if (juce::approximatelyEqual(currentPreGain, preGain))
     {
         buffer.applyGain(currentPreGain);
     }
     else
     {
-        buffer.applyGainRamp(0, numSamples, previousPreGain, currentPreGain);
-        previousPreGain = currentPreGain;
+        buffer.applyGainRamp(0, numSamples, preGain, currentPreGain);
+        preGain = currentPreGain;
     }
 
     for (int channel = 0; channel < numChannels; ++channel)
@@ -163,7 +163,7 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
         for (int sample = 0; sample < numSamples; ++sample)
         {
             float currentSample = channelData[sample];
-            newSample = exoAlgo.hardWerid(currentSample, hardness);
+            newSample = exoAlgo.applySinusoidalClip(currentSample, hardness, hct);
             channelData[sample] = newSample;
         }
     }
@@ -190,8 +190,8 @@ bool ExoDistAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* ExoDistAudioProcessor::createEditor()
 {
-    // return new ExoDistAudioProcessorEditor (*this);
-    return new juce::GenericAudioProcessorEditor(*this);
+    return new ExoDistAudioProcessorEditor (*this);
+    // return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
