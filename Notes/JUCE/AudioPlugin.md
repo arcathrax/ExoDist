@@ -6,3 +6,11 @@ Nun sollte man auf der linken Seite der Applikation `Plug-In>Basic` auswählen k
 Man sollte den Namen ändern und bei Bedarf nocht Module hinzufügen.
 
 # Was beinhaltet ein AudioPlugin?
+Ein *AudioPlugin* beinhaltet minimalen Code,
+welcher für ein Audio Plugin benötigt wird.
+
+Hierzu gehören folgende Files:
+- `PluginProcessor.cpp`
+- `PluginProcessor.h`
+- `PluginEditor.cpp`
+- `PluginEditor.h`
