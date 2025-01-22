@@ -1,5 +1,6 @@
 #ifndef EXOALGO_H
 #define EXOALGO_H
+
 class ExoAlgo
 {
 public:
@@ -19,4 +20,5 @@ private:
 	// functions
 	float normalizeBetweenThresholds(float rawInput, float softenTreshold, float hardTreshold);
 };
+
 #endif

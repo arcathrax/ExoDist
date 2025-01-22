@@ -140,8 +140,8 @@ bool ExoDistAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 
 void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-    auto numChannels = buffer.getNumChannels();
-    auto numSamples = buffer.getNumSamples();
+    float maxThreshold = *apvts.getRawParameterValue("maxThreshold");
+    float scalingFactor = *apvts.getRawParameterValue("Hardness");
 
     preGain = *apvts.getRawParameterValue("Pre Gain");
     postGain = *apvts.getRawParameterValue("Post Gain");
@@ -267,7 +267,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
                 0.000001f,
                 1.0f
             ),
-            0.75f
+            1.0f
         )
     );
 
@@ -280,7 +280,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             "Scale Factor",
             juce::NormalisableRange<float>
             (
-                0.0f,
+                -2.0f,
                 1.0f,
                 0.000001f,
                 1.0f
@@ -299,7 +299,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             juce::NormalisableRange<float>
             (
                 0.0f,
-                4.0f,
+                2.0f,
                 0.000001f,
                 0.25f
             ),

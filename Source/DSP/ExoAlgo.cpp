@@ -3,10 +3,11 @@
 #include "ExoAlgo.h"
 #include <cmath>
 
+
 float ExoAlgo::normalizeBetweenThresholds(float input, float softenThreshold, float hardThreshold) {
     float tresholdDifference;
     float adjustedInput;
-    float output;
+    float output
 
     tresholdDifference = hardThreshold - softenThreshold;
     adjustedInput = input - softenThreshold;
@@ -15,9 +16,10 @@ float ExoAlgo::normalizeBetweenThresholds(float input, float softenThreshold, fl
     return output;
 };
 
+
 float ExoAlgo::process(float inputValue)
 {
-    float finalOutput;
+    SampleType finalOutput;
     bool isInputNegative = inputValue < 0;
     inputValue = std::abs(inputValue);
 
@@ -25,6 +27,7 @@ float ExoAlgo::process(float inputValue)
 
     if (inputValue >= softenThreshold)
     {
+
 
         float thresholdDifference = maxThreshold - softenThreshold;
         float linearValue = normalizeBetweenThresholds(inputValue, softenThreshold, maxThreshold);
@@ -50,6 +53,7 @@ float ExoAlgo::process(float inputValue)
     }
 
     return finalOutput;
+
 }
 
 void ExoAlgo::setScaleFactor(float newScaleFactor)
