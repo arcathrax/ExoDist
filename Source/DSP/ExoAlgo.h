@@ -6,7 +6,7 @@ public:
 	// variables
 
 	//functions
-	float applySinusoidalClip(float inputValue);
+	float process(float inputValue);
 	
 	void setScaleFactor(float newScaleFactor);
 	void setMaxThreshold(float newMaxThreshold);

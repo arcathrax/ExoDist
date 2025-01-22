@@ -168,7 +168,7 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
             float currentSample = channelData[sample];
             exoAlgo.setScaleFactor(scaleFactor);
             exoAlgo.setMaxThreshold(maxThreshold);
-            newSample = exoAlgo.applySinusoidalClip(currentSample);
+            newSample = exoAlgo.process(currentSample);
             channelData[sample] = newSample;
         }
     }

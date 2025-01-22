@@ -15,7 +15,7 @@ float ExoAlgo::normalizeBetweenThresholds(float input, float softenThreshold, fl
     return output;
 };
 
-float ExoAlgo::applySinusoidalClip(float inputValue)
+float ExoAlgo::process(float inputValue)
 {
     float finalOutput;
     bool isInputNegative = inputValue < 0;
