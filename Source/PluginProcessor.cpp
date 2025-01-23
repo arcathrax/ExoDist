@@ -165,8 +165,8 @@ bool ExoDistAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* ExoDistAudioProcessor::createEditor()
 {
-    // return new ExoDistAudioProcessorEditor (*this);
-    return new juce::GenericAudioProcessorEditor(*this);
+    return new ExoDistAudioProcessorEditor (*this);
+    // return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
@@ -185,6 +185,22 @@ juce::AudioProcessorValueTreeState::ParameterLayout
 
     layout.add
     (
+        std::make_unique<juce::AudioParameterFloat>(
+            "Gain",
+            "Gain",
+            juce::NormalisableRange<float>
+            (
+                0.0f,
+                25.0f,
+                0.000001f,
+                0.35f
+            ),
+            1.0f
+        )
+    );
+
+    layout.add
+    (
         std::make_unique<juce::AudioParameterFloat>
         (
             "Cutoff",
@@ -192,11 +208,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             juce::NormalisableRange<float>
             (
                 20.0f,
-                20000.0f,
+                24000.0f,
                 0.000001f,
                 0.35f
             ),
-            20000.0f
+            24000.0f
         )
     );
 
@@ -249,22 +265,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout
         )
     );
 
-    layout.add
-    (
-        std::make_unique<juce::AudioParameterFloat>(
-            "Gain",
-            "Gain",
-            juce::NormalisableRange<float>
-            (
-                0.0f,
-                25.0f,
-                0.000001f,
-                0.35f
-            ),
-            1.0f
-        )
-    );
-
     return layout;
 }
 
@@ -311,7 +311,6 @@ void ExoDistAudioProcessor::initializeEffects()
     filter.setResonance(1.0f);
 
     // initialize limiter
-        // update the limiter
     auto& limiter = processorChain.template get<limiterIndex>();
     limiter.setThreshold(0.0f);
     limiter.setRelease(200.0f);

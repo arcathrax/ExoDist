@@ -27,5 +27,25 @@ public:
 private:
     ExoDistAudioProcessor& audioProcessor;
 
+    juce::Slider gainSlider,
+        cutoffSlider,
+        resonanceSlider,
+        thresholdSlider,
+        releaseSlider;
+
+    juce::Label titleLabel;
+
+    using APVTS = juce::AudioProcessorValueTreeState;
+    using Attachment = APVTS::SliderAttachment;
+
+    Attachment gainSliderAttachment,
+        cutoffSliderAttachment,
+        resonanceSliderAttachment,
+        thresholdSliderAttachment,
+        releaseSliderAttachment;
+
+    std::vector<juce::Component*> getComps();
+
+    //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExoDistAudioProcessorEditor)
 };
