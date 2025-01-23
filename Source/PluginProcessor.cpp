@@ -22,6 +22,10 @@ ExoDistAudioProcessor::ExoDistAudioProcessor()
     )
 #endif
 {
+    auto& filter = processorChain.template get<filterIndex>();
+
+    filter.setCutoffFrequencyHz(20000.0f);
+    filter.setResonance(1.0f);
 }
 
 ExoDistAudioProcessor::~ExoDistAudioProcessor()
@@ -93,6 +97,26 @@ void ExoDistAudioProcessor::changeProgramName (int index, const juce::String& ne
 //==============================================================================
 void ExoDistAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    juce::dsp::ProcessSpec spec;
+
+    spec.maximumBlockSize = samplesPerBlock;
+    spec.numChannels = getTotalNumOutputChannels();
+    spec.sampleRate = sampleRate;
+
+    processorChain.prepare(spec);
+
+    float cutoff = *apvts.getRawParameterValue("Cutoff");
+    float resonance = *apvts.getRawParameterValue("Resonance");
+
+    auto& filter = processorChain.template get<filterIndex>();
+    filter.setCutoffFrequencyHz(cutoff);
+    filter.setResonance(resonance);
+
+    auto& waveshaper = processorChain.template get<waveShaperIndex>();
+    waveshaper.functionToUse = [](float x)
+        {
+            return std::tanh(x);
+        };
 }
 
 void ExoDistAudioProcessor::releaseResources()
@@ -136,6 +160,19 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     // clear the buffer
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
     buffer.clear (i, 0, buffer.getNumSamples());
+
+    juce::dsp::AudioBlock<float> block(buffer);
+    juce::dsp::ProcessContextReplacing<float> context(block);
+
+    float cutoff = *apvts.getRawParameterValue("Cutoff");
+    float resonance = *apvts.getRawParameterValue("Resonance");
+
+    auto& filter = processorChain.template get<filterIndex>();
+
+    filter.setCutoffFrequencyHz(cutoff);
+    filter.setResonance(resonance);
+
+    processorChain.process(context);
 }
 
 
@@ -159,6 +196,48 @@ void ExoDistAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 
 void ExoDistAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout 
+    ExoDistAudioProcessor::createParameterLayout()
+{
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
+
+    layout.add
+    (
+        std::make_unique<juce::AudioParameterFloat>
+        (
+            "Cutoff",
+            "Cutoff",
+            juce::NormalisableRange<float>
+            (
+                20.0f,
+                20000.0f,
+                0.000001f,
+                0.35f
+            ),
+            20000.0f
+        )
+    );
+
+    layout.add
+    (
+        std::make_unique<juce::AudioParameterFloat>
+        (
+            "Resonance",
+            "Resonance",
+            juce::NormalisableRange<float>
+            (
+                0.0f,
+                1.0f,
+                0.000001f,
+                1.0f
+            ),
+            0.0f
+        )
+    );
+
+    return layout;
 }
 
 //==============================================================================
