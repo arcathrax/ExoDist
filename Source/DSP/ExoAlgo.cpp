@@ -7,7 +7,7 @@
 float ExoAlgo::normalizeBetweenThresholds(float input, float softenThreshold, float hardThreshold) {
     float tresholdDifference;
     float adjustedInput;
-    float output
+    float output;
 
     tresholdDifference = hardThreshold - softenThreshold;
     adjustedInput = input - softenThreshold;
@@ -19,7 +19,7 @@ float ExoAlgo::normalizeBetweenThresholds(float input, float softenThreshold, fl
 
 float ExoAlgo::process(float inputValue)
 {
-    SampleType finalOutput;
+    float finalOutput;
     bool isInputNegative = inputValue < 0;
     inputValue = std::abs(inputValue);
 

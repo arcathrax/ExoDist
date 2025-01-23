@@ -10,7 +10,6 @@
 
 #include <JuceHeader.h>
 #include "DSP/ExoAlgo.h"
-#include "DSP/ExoChain.h"
 
 //==============================================================================
 /**
@@ -54,25 +53,7 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
-
-    // Erstelle einen ValueTreeState und eine createParameter Funktion.
-    static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
-    juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
-
-
 private:
-    ExoChain exoChain;
-
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ExoDistAudioProcessor);
-
-    ExoAlgo exoAlgo;
-    float newSample;
-    float previousPreGain;
-    float preGain;
-    float previousPostGain;
-    float postGain;
-    float maxThreshold;
-    float scaleFactor;
-    float d;
 };

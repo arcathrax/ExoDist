@@ -93,17 +93,6 @@ void ExoDistAudioProcessor::changeProgramName (int index, const juce::String& ne
 //==============================================================================
 void ExoDistAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    juce::dsp::ProcessSpec spec;
-
-    spec.maximumBlockSize = samplesPerBlock;
-    spec.numChannels = 1;
-    spec.sampleRate = sampleRate;
-    
-    previousPreGain = preGain;
-    previousPostGain = postGain;
-
-    exoAlgo.setScaleFactor(scaleFactor);
-    exoAlgo.setMaxThreshold(maxThreshold);
 }
 
 void ExoDistAudioProcessor::releaseResources()
@@ -147,53 +136,6 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     // clear the buffer
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
     buffer.clear (i, 0, buffer.getNumSamples());
-    
-    // get the parameters
-    float maxThreshold = *apvts.getRawParameterValue("maxThreshold");
-    float scalingFactor = *apvts.getRawParameterValue("Hardness");
-    preGain = *apvts.getRawParameterValue("Pre Gain");
-    postGain = *apvts.getRawParameterValue("Post Gain");
-    maxThreshold = *apvts.getRawParameterValue("Max Threshold");
-    scaleFactor = *apvts.getRawParameterValue("Scale Factor");
-
-    // apply pregain
-    auto currentPreGain = preGain;
-    if (juce::approximatelyEqual(currentPreGain, preGain))
-    {
-        buffer.applyGain(currentPreGain);
-    }
-    else
-    {
-        buffer.applyGainRamp(0, numSamples, preGain, currentPreGain);
-        preGain = currentPreGain;
-    }
-
-    // process audiosignal trough algorithm
-    for (int channel = 0; channel < numChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer(channel);
-
-        for (int sample = 0; sample < numSamples; ++sample)
-        {
-            float currentSample = channelData[sample];
-            exoAlgo.setScaleFactor(scaleFactor);
-            exoAlgo.setMaxThreshold(maxThreshold);
-            newSample = exoAlgo.process(currentSample);
-            channelData[sample] = newSample;
-        }
-    }
-    
-    // apply postgain
-    auto currentPostGain = postGain;
-    if (juce::approximatelyEqual(currentPostGain, previousPostGain))
-    {
-        buffer.applyGain(currentPostGain);
-    }
-    else
-    {
-        buffer.applyGainRamp(0, numSamples, previousPostGain, currentPostGain);
-        previousPostGain = currentPostGain;
-    }
 }
 
 
@@ -213,24 +155,10 @@ juce::AudioProcessorEditor* ExoDistAudioProcessor::createEditor()
 //==============================================================================
 void ExoDistAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
-
-    juce::MemoryOutputStream mos(destData, true);
-    apvts.state.writeToStream(mos);
 }
 
 void ExoDistAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
-
-    auto tree = juce::ValueTree::readFromData(data, sizeInBytes);
-    if (tree.isValid())
-    {
-        apvts.replaceState(tree);
-    }
 }
 
 //==============================================================================
@@ -238,84 +166,4 @@ void ExoDistAudioProcessor::setStateInformation (const void* data, int sizeInByt
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new ExoDistAudioProcessor();
-}
-
-// Füge Parameter hinzu
-juce::AudioProcessorValueTreeState::ParameterLayout
-    ExoDistAudioProcessor::createParameterLayout()
-{
-    juce::AudioProcessorValueTreeState::ParameterLayout layout;
-
-    // Füge Pre Gain Parameter hinzu
-    layout.add
-    (
-        std::make_unique<juce::AudioParameterFloat>
-        (
-            "Pre Gain",
-            "Pre Gain",
-            juce::NormalisableRange<float>
-            (
-                0.0f,
-                25.0f,
-                0.000001f,
-                0.25f
-            ),
-            1.0f
-        )
-    );
-
-    // Füge Clipper Parameter hinzu
-    layout.add
-    (
-        std::make_unique<juce::AudioParameterFloat>
-        (
-            "Max Threshold",
-            "Max Threshold",
-            juce::NormalisableRange<float>
-            (
-                0.01f,
-                1.0f,
-                0.000001f,
-                1.0f
-            ),
-            1.0f
-        )
-    );
-
-    // Füge Clipper Parameter hinzu
-    layout.add
-    (
-        std::make_unique<juce::AudioParameterFloat>
-        (
-            "Scale Factor",
-            "Scale Factor",
-            juce::NormalisableRange<float>
-            (
-                -2.0f,
-                1.0f,
-                0.000001f,
-                1.0f
-            ),
-            1.0f
-        )
-    );
-
-    // Füge Post Gain Parameter hinzu
-    layout.add
-    (
-        std::make_unique<juce::AudioParameterFloat>
-        (
-            "Post Gain",
-            "Post Gain",
-            juce::NormalisableRange<float>
-            (
-                0.0f,
-                2.0f,
-                0.000001f,
-                0.25f
-            ),
-            1.0f
-        )
-    );
-    return layout;
 }
