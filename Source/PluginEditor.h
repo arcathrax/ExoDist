@@ -11,6 +11,17 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
+struct CustomRotarySlider : juce::Slider
+{
+    CustomRotarySlider() : juce::Slider
+    (
+        juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag,
+        juce::Slider::TextEntryBoxPosition::NoTextBox
+    )
+    {
+    }
+};
+
 //==============================================================================
 /**
 */
@@ -27,7 +38,7 @@ public:
 private:
     ExoDistAudioProcessor& audioProcessor;
 
-    juce::Slider gainSlider,
+    CustomRotarySlider gainSlider,
         cutoffSlider,
         resonanceSlider,
         thresholdSlider,

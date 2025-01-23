@@ -190,7 +190,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             "Gain",
             juce::NormalisableRange<float>
             (
-                0.0f,
+                1.0f,
                 25.0f,
                 0.000001f,
                 0.35f
