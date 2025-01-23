@@ -26,6 +26,12 @@ ExoDistAudioProcessor::ExoDistAudioProcessor()
 
     filter.setCutoffFrequencyHz(20000.0f);
     filter.setResonance(1.0f);
+
+    auto& waveshaper = processorChain.template get<waveShaperIndex>();
+    waveshaper.functionToUse = [](float x)
+        {
+            return std::tanh(x);
+        };
 }
 
 ExoDistAudioProcessor::~ExoDistAudioProcessor()

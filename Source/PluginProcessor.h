@@ -70,8 +70,6 @@ private:
     >;
 
     ProcessorChain processorChain;
-
-    float distortionFunction(float x);
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ExoDistAudioProcessor);
 };
