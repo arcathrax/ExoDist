@@ -22,16 +22,7 @@ ExoDistAudioProcessor::ExoDistAudioProcessor()
     )
 #endif
 {
-    auto& filter = processorChain.template get<filterIndex>();
-
-    filter.setCutoffFrequencyHz(20000.0f);
-    filter.setResonance(1.0f);
-
-    auto& waveshaper = processorChain.template get<waveShaperIndex>();
-    waveshaper.functionToUse = [](float x)
-        {
-            return std::tanh(x);
-        };
+    initializeEffects();
 }
 
 ExoDistAudioProcessor::~ExoDistAudioProcessor()
@@ -111,18 +102,7 @@ void ExoDistAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 
     processorChain.prepare(spec);
 
-    float cutoff = *apvts.getRawParameterValue("Cutoff");
-    float resonance = *apvts.getRawParameterValue("Resonance");
-    float threshold = *apvts.getRawParameterValue("Threshold");
-    float release = *apvts.getRawParameterValue("Release");
-
-    auto& filter = processorChain.template get<filterIndex>();
-    filter.setCutoffFrequencyHz(cutoff);
-    filter.setResonance(resonance);
-
-    auto& limiter = processorChain.template get<limiterIndex>();
-    limiter.setThreshold(threshold);
-    limiter.setRelease(release);
+    updateEffects();
 }
 
 void ExoDistAudioProcessor::releaseResources()
@@ -170,19 +150,7 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     juce::dsp::AudioBlock<float> block(buffer);
     juce::dsp::ProcessContextReplacing<float> context(block);
 
-    float cutoff = *apvts.getRawParameterValue("Cutoff");
-    float resonance = *apvts.getRawParameterValue("Resonance");
-    float threshold = *apvts.getRawParameterValue("Threshold");
-    float release = *apvts.getRawParameterValue("Release");
-
-    auto& filter = processorChain.template get<filterIndex>();
-
-    filter.setCutoffFrequencyHz(cutoff);
-    filter.setResonance(resonance);
-
-    auto& limiter = processorChain.template get<limiterIndex>();
-    limiter.setThreshold(threshold);
-    limiter.setRelease(release);
+    updateEffects();
 
     processorChain.process(context);
 }
@@ -281,7 +249,72 @@ juce::AudioProcessorValueTreeState::ParameterLayout
         )
     );
 
+    layout.add
+    (
+        std::make_unique<juce::AudioParameterFloat>(
+            "Gain",
+            "Gain",
+            juce::NormalisableRange<float>
+            (
+                0.0f,
+                25.0f,
+                0.000001f,
+                0.35f
+            ),
+            1.0f
+        )
+    );
+
     return layout;
+}
+
+void ExoDistAudioProcessor::updateEffects() 
+{
+    // get the parameters
+    float cutoffParameter = *apvts.getRawParameterValue("Cutoff");
+    float resonanceParameter = *apvts.getRawParameterValue("Resonance");
+    float thresholdParameter = *apvts.getRawParameterValue("Threshold");
+    float releaseParameter = *apvts.getRawParameterValue("Release");
+    float gainParameter = *apvts.getRawParameterValue("Gain");
+
+    // update gain
+    auto& gain = processorChain.template get<gainIndex>();
+    gain.setGainDecibels(juce::Decibels::gainToDecibels(gainParameter));
+
+    // update the filter
+    auto& filter = processorChain.template get<filterIndex>();
+    filter.setCutoffFrequencyHz(cutoffParameter);
+    filter.setResonance(resonanceParameter);
+
+    // update the limiter
+    auto& limiter = processorChain.template get<limiterIndex>();
+    limiter.setThreshold(thresholdParameter);
+    limiter.setRelease(releaseParameter);
+}
+
+void ExoDistAudioProcessor::initializeEffects()
+{
+    // initialize gain
+    auto& gain = processorChain.template get<gainIndex>();
+    gain.setGainDecibels(juce::Decibels::gainToDecibels(1.0f));
+
+    // initialize waveshaper
+    auto& waveshaper = processorChain.template get<waveShaperIndex>();
+    waveshaper.functionToUse = [](float x)
+        {
+            return std::tanh(x);
+        };
+
+    // initialize filter
+    auto& filter = processorChain.template get<filterIndex>();
+    filter.setCutoffFrequencyHz(20000.0f);
+    filter.setResonance(1.0f);
+
+    // initialize limiter
+        // update the limiter
+    auto& limiter = processorChain.template get<limiterIndex>();
+    limiter.setThreshold(0.0f);
+    limiter.setRelease(200.0f);
 }
 
 //==============================================================================

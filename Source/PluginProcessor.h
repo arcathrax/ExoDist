@@ -60,18 +60,23 @@ public:
 private:
     enum
     {
+        gainIndex,
         waveShaperIndex,
         filterIndex,
         limiterIndex
     };
 
     using ProcessorChain = juce::dsp::ProcessorChain<
+        juce::dsp::Gain<float>,
         juce::dsp::WaveShaper<float>,
         juce::dsp::LadderFilter<float>,
         juce::dsp::Limiter<float>
     >;
 
     ProcessorChain processorChain;
+
+    void updateEffects();
+    void initializeEffects();
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ExoDistAudioProcessor);
 };
