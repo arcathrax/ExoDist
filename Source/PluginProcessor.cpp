@@ -113,16 +113,16 @@ void ExoDistAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 
     float cutoff = *apvts.getRawParameterValue("Cutoff");
     float resonance = *apvts.getRawParameterValue("Resonance");
+    float threshold = *apvts.getRawParameterValue("Threshold");
+    float release = *apvts.getRawParameterValue("Release");
 
     auto& filter = processorChain.template get<filterIndex>();
     filter.setCutoffFrequencyHz(cutoff);
     filter.setResonance(resonance);
 
-    auto& waveshaper = processorChain.template get<waveShaperIndex>();
-    waveshaper.functionToUse = [](float x)
-        {
-            return std::tanh(x);
-        };
+    auto& limiter = processorChain.template get<limiterIndex>();
+    limiter.setThreshold(threshold);
+    limiter.setRelease(release);
 }
 
 void ExoDistAudioProcessor::releaseResources()
@@ -172,11 +172,17 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
     float cutoff = *apvts.getRawParameterValue("Cutoff");
     float resonance = *apvts.getRawParameterValue("Resonance");
+    float threshold = *apvts.getRawParameterValue("Threshold");
+    float release = *apvts.getRawParameterValue("Release");
 
     auto& filter = processorChain.template get<filterIndex>();
 
     filter.setCutoffFrequencyHz(cutoff);
     filter.setResonance(resonance);
+
+    auto& limiter = processorChain.template get<limiterIndex>();
+    limiter.setThreshold(threshold);
+    limiter.setRelease(release);
 
     processorChain.process(context);
 }
@@ -240,6 +246,38 @@ juce::AudioProcessorValueTreeState::ParameterLayout
                 1.0f
             ),
             0.0f
+        )
+    );
+
+    layout.add
+    (
+        std::make_unique<juce::AudioParameterFloat>(
+            "Threshold",
+            "Threshold",
+            juce::NormalisableRange<float>
+            (
+                -20.0f,
+                20.0f,
+                0.000001f,
+                1.0f
+            ),
+            0.0f
+        )
+    );
+
+    layout.add
+    (
+        std::make_unique<juce::AudioParameterFloat>(
+            "Release",
+            "Release",
+            juce::NormalisableRange<float>
+            (
+                0.0f,
+                800.0f,
+                0.000001f,
+                1.0f
+            ),
+            200.0f
         )
     );
 

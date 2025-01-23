@@ -61,12 +61,14 @@ private:
     enum
     {
         waveShaperIndex,
-        filterIndex
+        filterIndex,
+        limiterIndex
     };
 
     using ProcessorChain = juce::dsp::ProcessorChain<
         juce::dsp::WaveShaper<float>,
-        juce::dsp::LadderFilter<float>
+        juce::dsp::LadderFilter<float>,
+        juce::dsp::Limiter<float>
     >;
 
     ProcessorChain processorChain;
