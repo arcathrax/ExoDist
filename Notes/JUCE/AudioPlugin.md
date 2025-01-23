@@ -14,3 +14,13 @@ Hierzu gehören folgende Files:
 - `PluginProcessor.h`
 - `PluginEditor.cpp`
 - `PluginEditor.h`
+
+## Die `PluginProcessor` Klasse
+Dies ist die Klasse,
+welche für die Verarbeitung der Audio verwendet wird.
+
+## Die `PluginEditor` Klasse
+Dies ist die Klasse,
+welche die UI definiert.
+In einem JUCE-AudioPlugin sollte
+nur eine `PluginEditor` Klasse existieren.
