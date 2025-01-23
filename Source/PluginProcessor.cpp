@@ -140,14 +140,23 @@ bool ExoDistAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 
 void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+    juce::ScopedNoDenormals noDenormals;
+    auto totalNumInputChannels  = getTotalNumInputChannels();
+    auto totalNumOutputChannels = getTotalNumOutputChannels();
+    
+    // clear the buffer
+    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+    buffer.clear (i, 0, buffer.getNumSamples());
+    
+    // get the parameters
     float maxThreshold = *apvts.getRawParameterValue("maxThreshold");
     float scalingFactor = *apvts.getRawParameterValue("Hardness");
-
     preGain = *apvts.getRawParameterValue("Pre Gain");
     postGain = *apvts.getRawParameterValue("Post Gain");
     maxThreshold = *apvts.getRawParameterValue("Max Threshold");
     scaleFactor = *apvts.getRawParameterValue("Scale Factor");
 
+    // apply pregain
     auto currentPreGain = preGain;
     if (juce::approximatelyEqual(currentPreGain, preGain))
     {
@@ -159,6 +168,7 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
         preGain = currentPreGain;
     }
 
+    // process audiosignal trough algorithm
     for (int channel = 0; channel < numChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer(channel);
@@ -172,7 +182,8 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
             channelData[sample] = newSample;
         }
     }
-
+    
+    // apply postgain
     auto currentPostGain = postGain;
     if (juce::approximatelyEqual(currentPostGain, previousPostGain))
     {
