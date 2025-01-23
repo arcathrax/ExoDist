@@ -300,7 +300,8 @@ void ExoDistAudioProcessor::initializeEffects()
 
     // initialize waveshaper
     auto& waveshaper = processorChain.template get<waveShaperIndex>();
-    waveshaper.functionToUse = [](float x)
+    waveshaper.functionToUse =
+        [](float x)
         {
             return std::tanh(x);
         };

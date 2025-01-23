@@ -35,13 +35,13 @@ ExoDistAudioProcessorEditor::~ExoDistAudioProcessorEditor()
 //==============================================================================
 void ExoDistAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-
-    g.setColour (juce::Colours::white);
-
-    titleLabel.setFont(juce::Font(getY()*1.5, juce::Font::bold));
+    g.fillAll (juce::Colours::darkgrey);
+    
+    juce::FontOptions fontOptions = juce::FontOptions(50.f, juce::Font::bold);
+    
+    titleLabel.setFont(fontOptions);
     titleLabel.setText("ExoDist", juce::NotificationType::dontSendNotification);
-    titleLabel.setColour(juce::Label::textColourId, juce::Colours::lightgreen);
+    titleLabel.setColour(juce::Label::textColourId, juce::Colours::beige);
     titleLabel.setJustificationType(juce::Justification::centred);
 }
 
@@ -49,7 +49,7 @@ void ExoDistAudioProcessorEditor::resized()
 {
     auto fullWindowSection = getLocalBounds();
 
-    auto titleSection = fullWindowSection.removeFromTop(fullWindowSection.getHeight() * 0.15);
+    auto titleSection = fullWindowSection.removeFromTop(fullWindowSection.getHeight() * 0.25);
 
     auto effectsSection = fullWindowSection.removeFromTop(fullWindowSection.getHeight());
 

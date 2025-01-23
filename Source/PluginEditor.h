@@ -19,7 +19,9 @@ struct CustomRotarySlider : juce::Slider
         juce::Slider::TextEntryBoxPosition::NoTextBox
     )
     {
+        
     }
+    
 };
 
 //==============================================================================
