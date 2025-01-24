@@ -268,7 +268,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     return layout;
 }
 
-void ExoDistAudioProcessor::updateEffects() 
+void ExoDistAudioProcessor::updateEffects()
 {
     // get the parameters
     float cutoffParameter = *apvts.getRawParameterValue("Cutoff");
@@ -305,6 +305,11 @@ void ExoDistAudioProcessor::initializeEffects()
         {
             return std::tanh(x);
         };
+    
+    // initialize ExoAlgo
+    auto& exoAlgo = processorChain.template get<exoAlgoIndex>();
+    exoAlgo.setScaleFactor(0.25);
+    exoAlgo.setMaxThreshold(0.5);
 
     // initialize filter
     auto& filter = processorChain.template get<filterIndex>();

@@ -24,7 +24,7 @@ For installation, just download the `*.vst3.zip` file and extract it in your plu
 - Based on the [JUCE](https://juce.com) framework
 
 ## TODO
-- [ ] update `ExoAlgo` so it can be used in a `ProcessorChain`
+- [x] update `ExoAlgo` so it can be used in a `ProcessorChain`
 - [ ] create a github pages website for the plugin
 - [ ] update UI
   - [ ] add labels to sliders

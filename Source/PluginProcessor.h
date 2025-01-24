@@ -62,6 +62,7 @@ private:
     {
         gainIndex,
         waveShaperIndex,
+        exoAlgoIndex,
         filterIndex,
         limiterIndex
     };
@@ -69,6 +70,7 @@ private:
     using ProcessorChain = juce::dsp::ProcessorChain<
         juce::dsp::Gain<float>,
         juce::dsp::WaveShaper<float>,
+        ExoAlgo,
         juce::dsp::LadderFilter<float>,
         juce::dsp::Limiter<float>
     >;
