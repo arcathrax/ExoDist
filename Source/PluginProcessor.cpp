@@ -190,8 +190,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             "Gain",
             juce::NormalisableRange<float>
             (
+                0.0f,
                 1.0f,
-                25.0f,
                 0.000001f,
                 0.35f
             ),
@@ -202,12 +202,28 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     layout.add
     (
         std::make_unique<juce::AudioParameterFloat>(
-            "Multiplier",
-            "Multiplier",
+            "ScaleFactor",
+            "ScaleFactor",
             juce::NormalisableRange<float>
             (
+                0.0f,
                 1.0f,
-                25.0f,
+                0.000001f,
+                0.35f
+            ),
+            1.0f
+        )
+    );
+        
+    layout.add
+    (
+        std::make_unique<juce::AudioParameterFloat>(
+            "MaxThreshold",
+            "MaxThreshold",
+            juce::NormalisableRange<float>
+            (
+                0.0f,
+                1.0f,
                 0.000001f,
                 0.35f
             ),
@@ -287,12 +303,18 @@ juce::AudioProcessorValueTreeState::ParameterLayout
 void ExoDistAudioProcessor::updateEffects()
 {
     // get the parameters
+    float gainParameter = *apvts.getRawParameterValue("Gain");
+    
+    float scaleFactorParameter = *apvts.getRawParameterValue("ScaleFactor");
+    float maxThresholdParameter = *apvts.getRawParameterValue("MaxThreshold");
+    
     float cutoffParameter = *apvts.getRawParameterValue("Cutoff");
     float resonanceParameter = *apvts.getRawParameterValue("Resonance");
+    
     float thresholdParameter = *apvts.getRawParameterValue("Threshold");
     float releaseParameter = *apvts.getRawParameterValue("Release");
-    float gainParameter = *apvts.getRawParameterValue("Gain");
-    float multiplierParameter = *apvts.getRawParameterValue("Multiplier");
+
+
 
     // update gain
     auto& gain = processorChain.template get<gainIndex>();
@@ -300,7 +322,8 @@ void ExoDistAudioProcessor::updateEffects()
     
     // update exoAlgoProcessor
     auto& exoAlgoProcessor = processorChain.template get<exoAlgoIndex>();
-    exoAlgoProcessor.setMultiplier(multiplierParameter);
+    exoAlgoProcessor.setScaleFactor(scaleFactorParameter);
+    exoAlgoProcessor.setMaxThreshold(maxThresholdParameter);
 
     // update the filter
     auto& filter = processorChain.template get<filterIndex>();
@@ -318,14 +341,9 @@ void ExoDistAudioProcessor::initializeEffects()
     // initialize gain
     auto& gain = processorChain.template get<gainIndex>();
     gain.setGainDecibels(juce::Decibels::gainToDecibels(1.0f));
-
-    // initialize waveshaper
-    auto& waveshaper = processorChain.template get<waveShaperIndex>();
-    waveshaper.functionToUse =
-        [](float x)
-        {
-            return std::tanh(x);
-        };
+    
+    // initialize exoAlgoProcessor
+    auto& exoAlgoProcessor = processorChain.template get<exoAlgoIndex>();
 
     // initialize filter
     auto& filter = processorChain.template get<filterIndex>();

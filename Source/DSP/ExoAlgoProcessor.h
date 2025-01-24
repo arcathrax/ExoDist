@@ -15,7 +15,7 @@ template <typename Type>
 class ExoAlgoProcessor : public juce::dsp::ProcessorBase
 {
 public:
-    ExoAlgoProcessor() : multiplier(1.0f)
+    ExoAlgoProcessor() : scaleFactor(1.0f), maxThreshold(1.0f)
     {
         
     }
@@ -50,15 +50,72 @@ public:
     }
 
     
-    void setMultiplier(float newMultiplier)
+    void setScaleFactor(float newScaleFactor)
     {
-        this->multiplier = newMultiplier;
+        this->scaleFactor = newScaleFactor;
+    }
+
+    void setMaxThreshold(float newMaxThreshold)
+    {
+        this->maxThreshold = newMaxThreshold;
     }
 private:
-    float multiplier;
+    float scaleFactor;
+    float maxThreshold;
     
     float processSample(float sample)
     {
-        return sample * multiplier;
+        return applySinusodialClip(sample);
+    }
+    
+    float normalizeBetweenThresholds(float input, float softenThreshold, float hardThreshold) {
+        float tresholdDifference;
+        float adjustedInput;
+        float output;
+
+        tresholdDifference = hardThreshold - softenThreshold;
+        adjustedInput = input - softenThreshold;
+        output = adjustedInput / tresholdDifference;
+
+        return output;
+    };
+    
+    float applySinusodialClip(float inputValue)
+    {
+        float finalOutput;
+        bool isInputNegative = inputValue < 0;
+        inputValue = std::abs(inputValue);
+
+        float softenThreshold = maxThreshold * scaleFactor;
+
+        if (inputValue >= softenThreshold)
+        {
+
+
+            float thresholdDifference = maxThreshold - softenThreshold;
+            float linearValue = normalizeBetweenThresholds(inputValue, softenThreshold, maxThreshold);
+
+            if (linearValue < M_PI / 2)
+            {
+                float adjustedOutput = sin(linearValue) * thresholdDifference;
+                finalOutput = adjustedOutput + softenThreshold;
+            }
+            else
+            {
+                finalOutput = maxThreshold;
+            }
+        }
+        else
+        {
+            finalOutput = inputValue;
+        }
+
+        if (isInputNegative)
+        {
+            finalOutput = -finalOutput;
+        }
+
+        return finalOutput;
+
     }
 };
