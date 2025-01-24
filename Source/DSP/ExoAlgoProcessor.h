@@ -62,6 +62,7 @@ public:
 private:
     float scaleFactor;
     float maxThreshold;
+    const float PI = 3.14159265358979323846;
     
     float processSample(float sample)
     {
@@ -95,7 +96,7 @@ private:
             float thresholdDifference = maxThreshold - softenThreshold;
             float linearValue = normalizeBetweenThresholds(inputValue, softenThreshold, maxThreshold);
 
-            if (linearValue < M_PI / 2)
+            if (linearValue < PI / 2)
             {
                 float adjustedOutput = sin(linearValue) * thresholdDifference;
                 finalOutput = adjustedOutput + softenThreshold;
