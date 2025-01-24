@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="ZaZn2g" name="ExoDist" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" version="0.2.1"
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" version="0.2.4"
               pluginFormats="buildAU,buildStandalone,buildVST3" pluginVST3Category="Distortion"
               companyName="Arcathrax Productions" companyEmail="arcathrax@proton.me"
               pluginManufacturerCode="Arca" pluginCode="Exod" pluginAAXCategory="64">
