@@ -172,10 +172,17 @@ juce::AudioProcessorEditor* ExoDistAudioProcessor::createEditor()
 //==============================================================================
 void ExoDistAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
+    juce::MemoryOutputStream mos(destData, true);
+    apvts.state.writeToStream(mos);
 }
 
 void ExoDistAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
+    auto tree = juce::ValueTree::readFromData(data, sizeInBytes);
+    if (tree.isValid())
+    {
+        apvts.replaceState(tree);
+    }
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout 
