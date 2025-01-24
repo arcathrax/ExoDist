@@ -190,12 +190,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             "Gain",
             juce::NormalisableRange<float>
             (
-                0.0f,
-                1.0f,
+                0.75f,
+                25.0f,
                 0.000001f,
                 0.35f
             ),
-            1.0f
+            0.75f
         )
     );
         
@@ -206,8 +206,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             "ScaleFactor",
             juce::NormalisableRange<float>
             (
-                0.0f,
                 1.0f,
+                10.0f,
                 0.000001f,
                 0.35f
             ),
@@ -318,7 +318,7 @@ void ExoDistAudioProcessor::updateEffects()
 
     // update gain
     auto& gain = processorChain.template get<gainIndex>();
-    gain.setGainDecibels(juce::Decibels::gainToDecibels(gainParameter));
+    gain.setGainLinear(gainParameter);
     
     // update exoAlgoProcessor
     auto& exoAlgoProcessor = processorChain.template get<exoAlgoIndex>();
@@ -344,6 +344,8 @@ void ExoDistAudioProcessor::initializeEffects()
     
     // initialize exoAlgoProcessor
     auto& exoAlgoProcessor = processorChain.template get<exoAlgoIndex>();
+    exoAlgoProcessor.setScaleFactor(1.0f);
+    exoAlgoProcessor.setMaxThreshold(1.0f);
 
     // initialize filter
     auto& filter = processorChain.template get<filterIndex>();

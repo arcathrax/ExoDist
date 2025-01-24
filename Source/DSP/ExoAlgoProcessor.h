@@ -27,7 +27,7 @@ public:
     
     void process (const juce::dsp::ProcessContextReplacing<Type>& context) override
     {
-        auto& inputBlock = context.getInputBlock();
+        // auto& inputBlock = context.getInputBlock();
         auto& outputBlock = context.getOutputBlock();
 
         auto numChannels = outputBlock.getNumChannels();
