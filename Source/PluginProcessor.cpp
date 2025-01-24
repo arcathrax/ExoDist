@@ -165,8 +165,8 @@ bool ExoDistAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* ExoDistAudioProcessor::createEditor()
 {
-    return new ExoDistAudioProcessorEditor (*this);
-    // return new juce::GenericAudioProcessorEditor(*this);
+    // return new ExoDistAudioProcessorEditor (*this);
+    return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
@@ -188,6 +188,22 @@ juce::AudioProcessorValueTreeState::ParameterLayout
         std::make_unique<juce::AudioParameterFloat>(
             "Gain",
             "Gain",
+            juce::NormalisableRange<float>
+            (
+                1.0f,
+                25.0f,
+                0.000001f,
+                0.35f
+            ),
+            1.0f
+        )
+    );
+        
+    layout.add
+    (
+        std::make_unique<juce::AudioParameterFloat>(
+            "Multiplier",
+            "Multiplier",
             juce::NormalisableRange<float>
             (
                 1.0f,
@@ -276,10 +292,15 @@ void ExoDistAudioProcessor::updateEffects()
     float thresholdParameter = *apvts.getRawParameterValue("Threshold");
     float releaseParameter = *apvts.getRawParameterValue("Release");
     float gainParameter = *apvts.getRawParameterValue("Gain");
+    float multiplierParameter = *apvts.getRawParameterValue("Multiplier");
 
     // update gain
     auto& gain = processorChain.template get<gainIndex>();
     gain.setGainDecibels(juce::Decibels::gainToDecibels(gainParameter));
+    
+    // update exoAlgoProcessor
+    auto& exoAlgoProcessor = processorChain.template get<exoAlgoIndex>();
+    exoAlgoProcessor.setMultiplier(multiplierParameter);
 
     // update the filter
     auto& filter = processorChain.template get<filterIndex>();
@@ -305,11 +326,6 @@ void ExoDistAudioProcessor::initializeEffects()
         {
             return std::tanh(x);
         };
-    
-    // initialize ExoAlgo
-    auto& exoAlgo = processorChain.template get<exoAlgoIndex>();
-    exoAlgo.setScaleFactor(0.25);
-    exoAlgo.setMaxThreshold(0.5);
 
     // initialize filter
     auto& filter = processorChain.template get<filterIndex>();

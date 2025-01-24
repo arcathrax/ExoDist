@@ -8,8 +8,10 @@
   <MAINGROUP id="hxuzgT" name="ExoDist">
     <GROUP id="{2DD5CF52-4D58-22A5-B87E-A6843374F68E}" name="Source">
       <GROUP id="{1C83E6E9-F158-5067-4222-E8D43A293597}" name="DSP">
-        <FILE id="LI2LSK" name="ExoAlgo.cpp" compile="1" resource="0" file="Source/DSP/ExoAlgo.cpp"/>
-        <FILE id="DAYiUi" name="ExoAlgo.h" compile="0" resource="0" file="Source/DSP/ExoAlgo.h"/>
+        <FILE id="yVeiab" name="ExoAlgoProcessor.cpp" compile="1" resource="0"
+              file="Source/DSP/ExoAlgoProcessor.cpp"/>
+        <FILE id="zsjggM" name="ExoAlgoProcessor.h" compile="0" resource="0"
+              file="Source/DSP/ExoAlgoProcessor.h"/>
       </GROUP>
       <FILE id="Mi8ARL" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

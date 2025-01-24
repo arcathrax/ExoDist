@@ -9,7 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "DSP/ExoAlgo.h"
+#include "DSP/ExoAlgoProcessor.h"
 
 //==============================================================================
 /**
@@ -61,16 +61,16 @@ private:
     enum
     {
         gainIndex,
-        waveShaperIndex,
         exoAlgoIndex,
+        waveShaperIndex,
         filterIndex,
         limiterIndex
     };
 
     using ProcessorChain = juce::dsp::ProcessorChain<
         juce::dsp::Gain<float>,
+        ExoAlgoProcessor<float>,
         juce::dsp::WaveShaper<float>,
-        ExoAlgo,
         juce::dsp::LadderFilter<float>,
         juce::dsp::Limiter<float>
     >;
