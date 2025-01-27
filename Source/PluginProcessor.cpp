@@ -225,7 +225,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
                 0.000001f,
                 0.35f
             ),
-            0.75f
+            1.0f
         )
     );
         
@@ -255,7 +255,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
                 0.0f,
                 1.0f,
                 0.000001f,
-                0.35f
+                1.5f
             ),
             1.0f
         )
@@ -293,22 +293,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             0.0f
         )
     );
-
-    layout.add
-    (
-        std::make_unique<juce::AudioParameterFloat>(
-            "Release",
-            "Release",
-            juce::NormalisableRange<float>
-            (
-                200.0f,
-                8000.0f,
-                0.000001f,
-                0.25f
-            ),
-            800.0f
-        )
-    );
         
     layout.add
     (
@@ -322,7 +306,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
                 0.000001f,
                 0.35f
             ),
-            0.75f
+            1.0f
         )
     );
         
@@ -356,7 +340,6 @@ void ExoDistAudioProcessor::updateEffects()
     float cutoffParameter = *apvts.getRawParameterValue("Cutoff");
     
     float thresholdParameter = *apvts.getRawParameterValue("Threshold");
-    float releaseParameter = *apvts.getRawParameterValue("Release");
     
     float postGainParameter = *apvts.getRawParameterValue("PostGain");
 
@@ -374,12 +357,11 @@ void ExoDistAudioProcessor::updateEffects()
     // update the filter
     auto& filter = processorChain.template get<filterIndex>();
     filter.setCutoffFrequencyHz(cutoffParameter);
-    filter.setResonance((1-(cutoffParameter/28000))*0.25);
+    filter.setResonance((1-(cutoffParameter/24000))*0.25);
 
     // update the limiter
     auto& limiter = processorChain.template get<limiterIndex>();
     limiter.setThreshold(thresholdParameter);
-    limiter.setRelease(releaseParameter);
     
     // update postGain
     auto& postGain = processorChain.template get<postGainIndex>();
@@ -405,7 +387,7 @@ void ExoDistAudioProcessor::initializeEffects()
     // initialize limiter
     auto& limiter = processorChain.template get<limiterIndex>();
     limiter.setThreshold(0.0f);
-    limiter.setRelease(200.0f);
+    limiter.setRelease(800.0f);
     
     // initialize postGain
     auto& postGain = processorChain.template get<postGainIndex>();
