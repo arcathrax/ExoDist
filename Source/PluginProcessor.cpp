@@ -169,10 +169,11 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     updateEffects();
     
     // processing the signal through the various processors
-    processorChain.template get<gainIndex>().process(context);
+    processorChain.template get<preGainIndex>().process(context);
     processorChain.template get<exoAlgoIndex>().process(context);
     processorChain.template get<filterIndex>().process(context);
     processorChain.template get<limiterIndex>().process(context);
+    processorChain.template get<postGainIndex>().process(context);
     
     dryWetMixer.mixWetSamples(block);
 }
@@ -215,8 +216,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     layout.add
     (
         std::make_unique<juce::AudioParameterFloat>(
-            "Gain",
-            "Gain",
+            "PreGain",
+            "PreGain",
             juce::NormalisableRange<float>
             (
                 0.75f,
@@ -329,6 +330,22 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     layout.add
     (
         std::make_unique<juce::AudioParameterFloat>(
+            "PostGain",
+            "PostGain",
+            juce::NormalisableRange<float>
+            (
+                0.75f,
+                25.0f,
+                0.000001f,
+                0.35f
+            ),
+            0.75f
+        )
+    );
+        
+    layout.add
+    (
+        std::make_unique<juce::AudioParameterFloat>(
             "Mix",
             "Mix",
             juce::NormalisableRange<float>
@@ -348,7 +365,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
 void ExoDistAudioProcessor::updateEffects()
 {
     // get the parameters
-    float gainParameter = *apvts.getRawParameterValue("Gain");
+    float preGainParameter = *apvts.getRawParameterValue("PreGain");
     
     float scaleFactorParameter = *apvts.getRawParameterValue("ScaleFactor");
     float maxThresholdParameter = *apvts.getRawParameterValue("MaxThreshold");
@@ -358,12 +375,14 @@ void ExoDistAudioProcessor::updateEffects()
     
     float thresholdParameter = *apvts.getRawParameterValue("Threshold");
     float releaseParameter = *apvts.getRawParameterValue("Release");
+    
+    float postGainParameter = *apvts.getRawParameterValue("PostGain");
 
 
 
-    // update gain
-    auto& gain = processorChain.template get<gainIndex>();
-    gain.setGainLinear(gainParameter);
+    // update preGain
+    auto& preGain = processorChain.template get<preGainIndex>();
+    preGain.setGainLinear(preGainParameter);
     
     // update exoAlgoProcessor
     auto& exoAlgoProcessor = processorChain.template get<exoAlgoIndex>();
@@ -379,13 +398,17 @@ void ExoDistAudioProcessor::updateEffects()
     auto& limiter = processorChain.template get<limiterIndex>();
     limiter.setThreshold(thresholdParameter);
     limiter.setRelease(releaseParameter);
+    
+    // update postGain
+    auto& postGain = processorChain.template get<postGainIndex>();
+    postGain.setGainLinear(postGainParameter);
 }
 
 void ExoDistAudioProcessor::initializeEffects()
 {
-    // initialize gain
-    auto& gain = processorChain.template get<gainIndex>();
-    gain.setGainDecibels(juce::Decibels::gainToDecibels(1.0f));
+    // initialize preGain
+    auto& preGain = processorChain.template get<preGainIndex>();
+    preGain.setGainDecibels(juce::Decibels::gainToDecibels(1.0f));
     
     // initialize exoAlgoProcessor
     auto& exoAlgoProcessor = processorChain.template get<exoAlgoIndex>();
@@ -401,6 +424,10 @@ void ExoDistAudioProcessor::initializeEffects()
     auto& limiter = processorChain.template get<limiterIndex>();
     limiter.setThreshold(0.0f);
     limiter.setRelease(200.0f);
+    
+    // initialize postGain
+    auto& postGain = processorChain.template get<postGainIndex>();
+    postGain.setGainDecibels(juce::Decibels::gainToDecibels(1.0f));
 }
 
 //==============================================================================
