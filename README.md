@@ -31,5 +31,5 @@ For installation, just download the `*.vst3.zip` file and extract it in your plu
   - [ ] update how sliders look
   - [ ] update font
   - [ ] update background
-- [ ] update how the parameters are stored so they will be in the right position after reopening the project
+- [x] update how the parameters are stored so they will be in the right position after reopening the project
 - [ ] add dry wet knob
