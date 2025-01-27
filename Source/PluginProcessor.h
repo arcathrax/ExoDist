@@ -60,15 +60,17 @@ public:
 private:
     enum
     {
+        dryWetMixerIndex,
         gainIndex,
         exoAlgoIndex,
         filterIndex,
         limiterIndex
     };
 
-    juce::dsp::DryWetMixer<float> dryWetMixer;
+    // juce::dsp::DryWetMixer<float> dryWetMixer;
     
     using ProcessorChain = juce::dsp::ProcessorChain<
+        juce::dsp::DryWetMixer<float>,
         juce::dsp::Gain<float>,
         ExoAlgoProcessor<float>,
         juce::dsp::LadderFilter<float>,

@@ -102,6 +102,7 @@ void ExoDistAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 
     processorChain.prepare(spec);
 
+    auto& dryWetMixer = processorChain.template get<dryWetMixerIndex>();
     dryWetMixer.setWetLatency(0.0f);
     
     updateEffects();
@@ -153,6 +154,7 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     juce::dsp::ProcessContextReplacing<float> context(block);
     
     // setup dryWetMixer
+    auto& dryWetMixer = processorChain.template get<dryWetMixerIndex>();
     juce::dsp::AudioBlock<float> originalBlock(block);
     auto& mixParameter = *apvts.getRawParameterValue("Mix");
     auto mixingRule = juce::dsp::DryWetMixer<float>::MixingRule::linear;
@@ -161,7 +163,11 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     dryWetMixer.pushDrySamples(originalBlock);
 
     updateEffects();
-    processorChain.process(context);
+    // processorChain.process(context);
+    processorChain.template get<gainIndex>().process(context);
+    processorChain.template get<exoAlgoIndex>().process(context);
+    processorChain.template get<filterIndex>().process(context);
+    processorChain.template get<limiterIndex>().process(context);
     
     dryWetMixer.mixWetSamples(block);
 }
