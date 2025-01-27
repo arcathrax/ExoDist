@@ -77,6 +77,12 @@ void ExoDistAudioProcessorEditor::paint (juce::Graphics& g)
     fftLabel.setColour(juce::Label::backgroundColourId, juce::Colour(HighlightColor));
     
     preGainLabel.setJustificationType(juce::Justification::centred);
+    scaleFactorLabel.setJustificationType(juce::Justification::centred);
+    maxThresholdLabel.setJustificationType(juce::Justification::centred);
+    cutoffLabel.setJustificationType(juce::Justification::centred);
+    thresholdLabel.setJustificationType(juce::Justification::centred);
+    postGainLabel.setJustificationType(juce::Justification::centred);
+    mixLabel.setJustificationType(juce::Justification::centred);
     
     addAndMakeVisible(authorLabel);
     addAndMakeVisible(preGainLabel);
@@ -114,13 +120,28 @@ void ExoDistAudioProcessorEditor::resized()
     
     // setup left parameters
     
+    // setup scaleFactorSlider
+    auto scaleFactorSection = leftParametersSection.removeFromTop(parameterSection.getHeight()*0.5);
+    auto scaleFactorSliderSection = scaleFactorSection.removeFromTop(scaleFactorSection.getHeight()*0.85);
+    auto scaleFactorLabelSection = scaleFactorSection;
+    scaleFactorSlider.setBounds(scaleFactorSliderSection);
+    scaleFactorLabel.setBounds(scaleFactorLabelSection);
+    
+    // setup maxThresholdSlider
+    auto maxThresholdSection = leftParametersSection;
+    auto maxThresholdSliderSection = maxThresholdSection.removeFromTop(maxThresholdSection.getHeight()*0.85);
+    auto maxThresholdLabelSection = maxThresholdSection;
+    maxThresholdSlider.setBounds(maxThresholdSliderSection);
+    maxThresholdLabel.setBounds(maxThresholdLabelSection);
+    
     // setup middle parameters
-    auto preGainKnobSection = middleParametersSection.removeFromTop(middleParametersSection.getHeight()*0.85);
+    auto preGainSliderSection = middleParametersSection.removeFromTop(middleParametersSection.getHeight()*0.85);
     auto preGainLabelSection = middleParametersSection;
-    preGainSlider.setBounds(preGainKnobSection);
+    preGainSlider.setBounds(preGainSliderSection);
     preGainLabel.setBounds(preGainLabelSection);
     
     // setup right parameters
+    
 }
 
 
