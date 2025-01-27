@@ -163,7 +163,6 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     dryWetMixer.pushDrySamples(originalBlock);
 
     updateEffects();
-    // processorChain.process(context);
     processorChain.template get<gainIndex>().process(context);
     processorChain.template get<exoAlgoIndex>().process(context);
     processorChain.template get<filterIndex>().process(context);

@@ -66,8 +66,6 @@ private:
         filterIndex,
         limiterIndex
     };
-
-    // juce::dsp::DryWetMixer<float> dryWetMixer;
     
     using ProcessorChain = juce::dsp::ProcessorChain<
         juce::dsp::DryWetMixer<float>,
