@@ -60,6 +60,8 @@ private:
     juce::Label thresholdLabel;
     juce::Label postGainLabel;
     juce::Label mixLabel;
+    
+    juce::Label fftLabel;
 
     using APVTS = juce::AudioProcessorValueTreeState;
     using Attachment = APVTS::SliderAttachment;

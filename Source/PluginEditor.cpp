@@ -42,7 +42,9 @@ void ExoDistAudioProcessorEditor::paint (juce::Graphics& g)
     titleLabel.setFont(titleFontOptions);
     titleLabel.setText("ExoDist", juce::NotificationType::dontSendNotification);
     titleLabel.setColour(juce::Label::textColourId, juce::Colour(TitleColor));
-    titleLabel.setJustificationType(juce::Justification::centred);
+    titleLabel.setJustificationType(juce::Justification::left);
+    
+    addAndMakeVisible(titleLabel);
     
     // setup description labels
     juce::FontOptions descriptionFontOptions = juce::FontOptions(15.f, juce::Font::plain);
@@ -64,19 +66,61 @@ void ExoDistAudioProcessorEditor::paint (juce::Graphics& g)
     postGainLabel.setText("postgain", juce::NotificationType::dontSendNotification);
     mixLabel.setText("mix", juce::NotificationType::dontSendNotification);
     
-    authorLabel.setColour(juce::Label::textColourId, juce::Colour(TitleColor));
-    preGainLabel.setColour(juce::Label::textColourId, juce::Colour(TitleColor));
-    scaleFactorLabel.setColour(juce::Label::textColourId, juce::Colour(TitleColor));
-    maxThresholdLabel.setColour(juce::Label::textColourId, juce::Colour(TitleColor));
-    cutoffLabel.setColour(juce::Label::textColourId, juce::Colour(TitleColor));
-    thresholdLabel.setColour(juce::Label::textColourId, juce::Colour(TitleColor));
-    postGainLabel.setColour(juce::Label::textColourId, juce::Colour(TitleColor));
-    mixLabel.setColour(juce::Label::textColourId, juce::Colour(TitleColor));
+    authorLabel.setColour(juce::Label::textColourId, juce::Colour(ContentColor));
+    preGainLabel.setColour(juce::Label::textColourId, juce::Colour(ContentColor));
+    scaleFactorLabel.setColour(juce::Label::textColourId, juce::Colour(ContentColor));
+    maxThresholdLabel.setColour(juce::Label::textColourId, juce::Colour(ContentColor));
+    cutoffLabel.setColour(juce::Label::textColourId, juce::Colour(ContentColor));
+    thresholdLabel.setColour(juce::Label::textColourId, juce::Colour(ContentColor));
+    postGainLabel.setColour(juce::Label::textColourId, juce::Colour(ContentColor));
+    mixLabel.setColour(juce::Label::textColourId, juce::Colour(ContentColor));
+    fftLabel.setColour(juce::Label::backgroundColourId, juce::Colour(HighlightColor));
+    
+    preGainLabel.setJustificationType(juce::Justification::centred);
+    
+    addAndMakeVisible(authorLabel);
+    addAndMakeVisible(preGainLabel);
+    addAndMakeVisible(scaleFactorLabel);
+    addAndMakeVisible(maxThresholdLabel);
+    addAndMakeVisible(cutoffLabel);
+    addAndMakeVisible(thresholdLabel);
+    addAndMakeVisible(postGainLabel);
+    addAndMakeVisible(mixLabel);
+    
+    addAndMakeVisible(fftLabel);
 }
 
 void ExoDistAudioProcessorEditor::resized()
 {
     auto fullWindowSection = getLocalBounds();
+    
+    // setup main sections
+    auto titleSection = fullWindowSection.removeFromTop(fullWindowSection.getHeight()*0.2);
+    auto fftSection = fullWindowSection.removeFromTop(fullWindowSection.getHeight()*0.25);
+    auto parameterSection = fullWindowSection;
+    
+    // setup title section
+    auto titleLabelSection = titleSection.removeFromTop(titleSection.getHeight()*0.85);
+    auto authorLabelSection = titleSection;
+    titleLabel.setBounds(titleLabelSection);
+    authorLabel.setBounds(authorLabelSection);
+    
+    // setup fft section
+    fftLabel.setBounds(fftSection);
+    
+    auto leftParametersSection = parameterSection.removeFromLeft(parameterSection.getWidth()*0.33);
+    auto middleParametersSection = parameterSection.removeFromLeft(parameterSection.getWidth()*0.50);
+    auto rightParametersSection = parameterSection;
+    
+    // setup left parameters
+    
+    // setup middle parameters
+    auto preGainKnobSection = middleParametersSection.removeFromTop(middleParametersSection.getHeight()*0.85);
+    auto preGainLabelSection = middleParametersSection;
+    preGainSlider.setBounds(preGainKnobSection);
+    preGainLabel.setBounds(preGainLabelSection);
+    
+    // setup right parameters
 }
 
 
