@@ -236,8 +236,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             "ScaleFactor",
             juce::NormalisableRange<float>
             (
+                0.0f,
                 1.0f,
-                10.0f,
                 0.000001f,
                 0.35f
             ),
@@ -302,7 +302,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             "Threshold",
             juce::NormalisableRange<float>
             (
-                -20.0f,
+                0.0f,
                 20.0f,
                 0.000001f,
                 1.0f
@@ -318,12 +318,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             "Release",
             juce::NormalisableRange<float>
             (
-                0.0f,
-                800.0f,
+                200.0f,
+                8000.0f,
                 0.000001f,
-                1.0f
+                0.25f
             ),
-            200.0f
+            800.0f
         )
     );
         
