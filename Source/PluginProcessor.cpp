@@ -102,6 +102,9 @@ void ExoDistAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 
     processorChain.prepare(spec);
 
+    auto& dryWetMixer = processorChain.template get<dryWetMixerIndex>();
+    dryWetMixer.setWetLatency(0.0f);
+    
     updateEffects();
 }
 
@@ -149,10 +152,23 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
     juce::dsp::AudioBlock<float> block(buffer);
     juce::dsp::ProcessContextReplacing<float> context(block);
+    
+    // setup dryWetMixer
+    auto& dryWetMixer = processorChain.template get<dryWetMixerIndex>();
+    juce::dsp::AudioBlock<float> originalBlock(block);
+    auto& mixParameter = *apvts.getRawParameterValue("Mix");
+    auto mixingRule = juce::dsp::DryWetMixer<float>::MixingRule::linear;
+    dryWetMixer.setMixingRule(mixingRule);
+    dryWetMixer.setWetMixProportion(mixParameter);
+    dryWetMixer.pushDrySamples(originalBlock);
 
     updateEffects();
-
-    processorChain.process(context);
+    processorChain.template get<gainIndex>().process(context);
+    processorChain.template get<exoAlgoIndex>().process(context);
+    processorChain.template get<filterIndex>().process(context);
+    processorChain.template get<limiterIndex>().process(context);
+    
+    dryWetMixer.mixWetSamples(block);
 }
 
 
@@ -301,6 +317,22 @@ juce::AudioProcessorValueTreeState::ParameterLayout
                 1.0f
             ),
             200.0f
+        )
+    );
+        
+    layout.add
+    (
+        std::make_unique<juce::AudioParameterFloat>(
+            "Mix",
+            "Mix",
+            juce::NormalisableRange<float>
+            (
+                0.0f,
+                1.0f,
+                0.000001f,
+                1.0f
+            ),
+            1.0f
         )
     );
 
