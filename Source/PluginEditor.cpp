@@ -105,11 +105,19 @@ void ExoDistAudioProcessorEditor::resized()
     auto fftSection = fullWindowSection.removeFromTop(fullWindowSection.getHeight()*0.25);
     auto parameterSection = fullWindowSection;
     
-    // setup title section
+    // setup title/postgain section
     auto titleLabelSection = titleSection.removeFromTop(titleSection.getHeight()*0.85);
+    
+    auto postGainSection = titleLabelSection.removeFromRight(titleLabelSection.getWidth()*0.15);
+    auto postGainSliderSection = postGainSection.removeFromTop(postGainSection.getHeight()*0.85);
+    
+    auto postGainLabelSection = postGainSection;
     auto authorLabelSection = titleSection;
     titleLabel.setBounds(titleLabelSection);
     authorLabel.setBounds(authorLabelSection);
+    
+    postGainSlider.setBounds(postGainSliderSection);
+    postGainLabel.setBounds(postGainLabelSection);
     
     // setup fft section
     fftLabel.setBounds(fftSection);
