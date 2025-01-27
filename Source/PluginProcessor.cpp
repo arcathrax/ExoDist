@@ -280,23 +280,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout
 
     layout.add
     (
-        std::make_unique<juce::AudioParameterFloat>
-        (
-            "Resonance",
-            "Resonance",
-            juce::NormalisableRange<float>
-            (
-                0.0f,
-                1.0f,
-                0.000001f,
-                1.0f
-            ),
-            0.0f
-        )
-    );
-
-    layout.add
-    (
         std::make_unique<juce::AudioParameterFloat>(
             "Threshold",
             "Threshold",
@@ -371,7 +354,6 @@ void ExoDistAudioProcessor::updateEffects()
     float maxThresholdParameter = *apvts.getRawParameterValue("MaxThreshold");
     
     float cutoffParameter = *apvts.getRawParameterValue("Cutoff");
-    float resonanceParameter = *apvts.getRawParameterValue("Resonance");
     
     float thresholdParameter = *apvts.getRawParameterValue("Threshold");
     float releaseParameter = *apvts.getRawParameterValue("Release");
@@ -392,7 +374,7 @@ void ExoDistAudioProcessor::updateEffects()
     // update the filter
     auto& filter = processorChain.template get<filterIndex>();
     filter.setCutoffFrequencyHz(cutoffParameter);
-    filter.setResonance(resonanceParameter);
+    filter.setResonance((1-(cutoffParameter/28000))*0.25);
 
     // update the limiter
     auto& limiter = processorChain.template get<limiterIndex>();
