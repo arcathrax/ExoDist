@@ -102,24 +102,29 @@ void ExoDistAudioProcessorEditor::resized()
     
     // setup main sections
     auto titleSection = fullWindowSection.removeFromTop(fullWindowSection.getHeight()*0.2);
-    auto fftSection = fullWindowSection.removeFromTop(fullWindowSection.getHeight()*0.25);
-    auto parameterSection = fullWindowSection;
+    auto fftSection = fullWindowSection.removeFromTop(fullWindowSection.getHeight()*0.070);
+    auto parameterSection = fullWindowSection.removeFromBottom(fullWindowSection.getHeight());
     
     // setup title/postgain section
     auto titleLabelSection = titleSection.removeFromTop(titleSection.getHeight()*0.85);
     
-    auto postGainSection = titleLabelSection.removeFromRight(titleLabelSection.getWidth()*0.15);
+    auto postGainSection = titleLabelSection.removeFromRight(titleSection.getWidth()*0.15);
     auto postGainSliderSection = postGainSection.removeFromTop(postGainSection.getHeight()*0.85);
     
-    auto postGainLabelSection = postGainSection;
+    const int preGainSliderSectionMargin = 10;
+       postGainSliderSection = postGainSliderSection.withTrimmedLeft(preGainSliderSectionMargin).withTrimmedTop(preGainSliderSectionMargin);
+    
+    // auto postGainLabelSection = postGainSection;
     auto authorLabelSection = titleSection;
     titleLabel.setBounds(titleLabelSection);
     authorLabel.setBounds(authorLabelSection);
     
     postGainSlider.setBounds(postGainSliderSection);
-    postGainLabel.setBounds(postGainLabelSection);
+    // postGainLabel.setBounds(postGainLabelSection);
     
     // setup fft section
+    const int fftSectionMargin = 10;
+    fftSection = fftSection.withTrimmedLeft(fftSectionMargin).withTrimmedRight(fftSectionMargin).withTrimmedTop(fftSectionMargin).withTrimmedBottom(fftSectionMargin);
     fftLabel.setBounds(fftSection);
     
     auto leftParametersSection = parameterSection.removeFromLeft(parameterSection.getWidth()*0.33);
@@ -159,7 +164,7 @@ void ExoDistAudioProcessorEditor::resized()
     
     // setup thresholdSlider
     auto thresholdSection = rightParametersSection;
-    auto thresholdSliderSection = rightParametersSection.removeFromTop(rightParametersSection.getHeight()*0.85);
+    auto thresholdSliderSection = rightParametersSection.removeFromTop(thresholdSection.getHeight()*0.85);
     auto thresholdLabelSection = rightParametersSection;
     thresholdSlider.setBounds(thresholdSliderSection);
     thresholdLabel.setBounds(thresholdLabelSection);
