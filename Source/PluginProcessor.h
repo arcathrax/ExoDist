@@ -66,6 +66,8 @@ private:
         limiterIndex
     };
 
+    juce::dsp::DryWetMixer<float> dryWetMixer;
+    
     using ProcessorChain = juce::dsp::ProcessorChain<
         juce::dsp::Gain<float>,
         ExoAlgoProcessor<float>,
