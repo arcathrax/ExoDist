@@ -51,9 +51,11 @@ private:
     
     // defining the labels
     juce::Label titleLabel;
+    
     juce::Label authorLabel;
     juce::Label preGainLabel;
     juce::Label scaleFactorLabel;
+    juce::Label maxThresholdLabel;
     juce::Label cutoffLabel;
     juce::Label thresholdLabel;
     juce::Label postGainLabel;
