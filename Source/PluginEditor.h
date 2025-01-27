@@ -40,24 +40,43 @@ public:
 private:
     ExoDistAudioProcessor& audioProcessor;
 
-    CustomRotarySlider gainSlider,
+    // defining the sliders
+    CustomRotarySlider preGainSlider,
+        scaleFactorSlider,
+        maxThresholdSlider,
         cutoffSlider,
-        resonanceSlider,
         thresholdSlider,
-        releaseSlider;
-
+        postGainSlider,
+        mixSlider;
+    
+    // defining the labels
     juce::Label titleLabel;
+    juce::Label authorLabel;
+    juce::Label preGainLabel;
+    juce::Label scaleFactorLabel;
+    juce::Label cutoffLabel;
+    juce::Label thresholdLabel;
+    juce::Label postGainLabel;
+    juce::Label mixLabel;
 
     using APVTS = juce::AudioProcessorValueTreeState;
     using Attachment = APVTS::SliderAttachment;
 
-    Attachment gainSliderAttachment,
+    // defining the slider attachments
+    Attachment preGainSliderAttachment,
+        scaleFactorSliderAttachment,
+        maxThresholdSliderAttachment,
         cutoffSliderAttachment,
-        resonanceSliderAttachment,
         thresholdSliderAttachment,
-        releaseSliderAttachment;
+        postGainSliderAttachment,
+        mixSliderAttachment;
 
     std::vector<juce::Component*> getComps();
+    
+    juce::uint32 BackgroundColor = 0xFF1a1a19;
+    juce::uint32 ContentColor = 0xFF4f8131;
+    juce::uint32 TitleColor = 0xFF80993c;
+    juce::uint32 HighlightColor = 0xFFf6fcdf;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExoDistAudioProcessorEditor)
