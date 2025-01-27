@@ -121,7 +121,7 @@ void ExoDistAudioProcessorEditor::resized()
     // setup left parameters
     
     // setup scaleFactorSlider
-    auto scaleFactorSection = leftParametersSection.removeFromTop(parameterSection.getHeight()*0.5);
+    auto scaleFactorSection = leftParametersSection.removeFromTop(leftParametersSection.getHeight()*0.5);
     auto scaleFactorSliderSection = scaleFactorSection.removeFromTop(scaleFactorSection.getHeight()*0.85);
     auto scaleFactorLabelSection = scaleFactorSection;
     scaleFactorSlider.setBounds(scaleFactorSliderSection);
@@ -142,6 +142,19 @@ void ExoDistAudioProcessorEditor::resized()
     
     // setup right parameters
     
+    // setup cutoffSlider
+    auto cutoffSection = rightParametersSection.removeFromTop(rightParametersSection.getHeight()*0.5);
+    auto cutoffSliderSection = cutoffSection.removeFromTop(cutoffSection.getHeight()*0.85);
+    auto cutoffLabelSection = cutoffSection;
+    cutoffSlider.setBounds(cutoffSliderSection);
+    cutoffLabel.setBounds(cutoffLabelSection);
+    
+    // setup thresholdSlider
+    auto thresholdSection = rightParametersSection;
+    auto thresholdSliderSection = rightParametersSection.removeFromTop(rightParametersSection.getHeight()*0.85);
+    auto thresholdLabelSection = rightParametersSection;
+    thresholdSlider.setBounds(thresholdSliderSection);
+    thresholdLabel.setBounds(thresholdLabelSection);
 }
 
 
