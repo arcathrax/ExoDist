@@ -35,7 +35,13 @@ ExoDistAudioProcessorEditor::~ExoDistAudioProcessorEditor()
 //==============================================================================
 void ExoDistAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colour(BackgroundColor));
+    juce::ColourGradient gradient(
+        juce::Colour(0xFFf6fcdf), 0, 0,
+        juce::Colour(0xFFf6fcdf), 0, getHeight(),
+        false
+    );
+    g.setGradientFill(gradient);
+    g.fillAll();
     
     // setup title label
     juce::FontOptions titleFontOptions = juce::FontOptions(50.f, juce::Font::bold);
