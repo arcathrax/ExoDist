@@ -100,11 +100,14 @@ void ExoDistAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     spec.numChannels = getTotalNumOutputChannels();
     spec.sampleRate = sampleRate;
 
+    // setup the processorchain
     processorChain.prepare(spec);
-
+    
+    // setup dryWetMixer
     auto& dryWetMixer = processorChain.template get<dryWetMixerIndex>();
     dryWetMixer.setWetLatency(0.0f);
     
+    // updating the processorChain configurations
     updateEffects();
 }
 
@@ -162,7 +165,10 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     dryWetMixer.setWetMixProportion(mixParameter);
     dryWetMixer.pushDrySamples(originalBlock);
 
+    // updating the processorChain configurations
     updateEffects();
+    
+    // processing the signal through the various processors
     processorChain.template get<gainIndex>().process(context);
     processorChain.template get<exoAlgoIndex>().process(context);
     processorChain.template get<filterIndex>().process(context);

@@ -32,4 +32,5 @@ For installation, just download the `*.vst3.zip` file and extract it in your plu
   - [ ] update font
   - [ ] update background
 - [x] update how the parameters are stored so they will be in the right position after reopening the project
-- [ ] add dry wet knob
+- [x] add dry wet knob
+- [ ] setup lowband distoriton
