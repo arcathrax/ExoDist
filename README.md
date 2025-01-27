@@ -26,11 +26,12 @@ For installation, just download the `*.vst3.zip` file and extract it in your plu
 ## TODO
 - [x] update `ExoAlgo` so it can be used in a `ProcessorChain`
 - [ ] create a github pages website for the plugin
-- [ ] update UI
-  - [ ] add labels to sliders
-  - [ ] update how sliders look
+- [x] update UI
+  - [x] add labels to sliders
+  - [x] update how sliders look
   - [ ] update font
-  - [ ] update background
+  - [x] update background
+  - [ ] update background to be a gradient
 - [x] update how the parameters are stored so they will be in the right position after reopening the project
 - [x] add dry wet knob
-- [ ] setup lowband distoriton
+- [ ] setup air for vocals
