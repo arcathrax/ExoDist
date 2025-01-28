@@ -68,39 +68,11 @@ private:
     ExoDistAudioProcessor& audioProcessor;
 
     // defining the sliders
-    CustomRotarySlider preGainSlider,
-        scaleFactorSlider,
-        maxThresholdSlider,
-        cutoffSlider,
-        thresholdSlider,
-        postGainSlider,
-        mixSlider;
-    
-    // defining the labels
-    juce::Label titleLabel;
-    
-    juce::Label authorLabel;
-    juce::Label preGainLabel;
-    juce::Label scaleFactorLabel;
-    juce::Label maxThresholdLabel;
-    juce::Label cutoffLabel;
-    juce::Label thresholdLabel;
-    juce::Label postGainLabel;
-    juce::Label mixLabel;
-    
-    juce::Label fftLabel;
 
     using APVTS = juce::AudioProcessorValueTreeState;
     using Attachment = APVTS::SliderAttachment;
 
     // defining the slider attachments
-    Attachment preGainSliderAttachment,
-        scaleFactorSliderAttachment,
-        maxThresholdSliderAttachment,
-        cutoffSliderAttachment,
-        thresholdSliderAttachment,
-        postGainSliderAttachment,
-        mixSliderAttachment;
 
     std::vector<juce::Component*> getComps();
     

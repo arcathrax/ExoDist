@@ -103,10 +103,6 @@ void ExoDistAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     // setup the processorchain
     processorChain.prepare(spec);
     
-    // setup dryWetMixer
-    auto& dryWetMixer = processorChain.template get<dryWetMixerIndex>();
-    dryWetMixer.setWetLatency(0.0f);
-    
     // updating the processorChain configurations
     updateEffects();
 }
@@ -155,27 +151,12 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
 
     juce::dsp::AudioBlock<float> block(buffer);
     juce::dsp::ProcessContextReplacing<float> context(block);
-    
-    // setup dryWetMixer
-    auto& dryWetMixer = processorChain.template get<dryWetMixerIndex>();
-    juce::dsp::AudioBlock<float> originalBlock(block);
-    auto& mixParameter = *apvts.getRawParameterValue("Mix");
-    auto mixingRule = juce::dsp::DryWetMixer<float>::MixingRule::linear;
-    dryWetMixer.setMixingRule(mixingRule);
-    dryWetMixer.setWetMixProportion(mixParameter);
-    dryWetMixer.pushDrySamples(originalBlock);
 
     // updating the processorChain configurations
     updateEffects();
     
-    // processing the signal through the various processors
-    processorChain.template get<preGainIndex>().process(context);
-    processorChain.template get<exoAlgoIndex>().process(context);
-    processorChain.template get<filterIndex>().process(context);
-    processorChain.template get<limiterIndex>().process(context);
-    processorChain.template get<postGainIndex>().process(context);
-    
-    dryWetMixer.mixWetSamples(block);
+    // processing the signal
+    processorChain.process(context);
 }
 
 
@@ -188,8 +169,8 @@ bool ExoDistAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* ExoDistAudioProcessor::createEditor()
 {
-    return new ExoDistAudioProcessorEditor (*this);
-    // return new juce::GenericAudioProcessorEditor(*this);
+    // return new ExoDistAudioProcessorEditor (*this);
+    return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
@@ -221,7 +202,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             juce::NormalisableRange<float>
             (
                 0.75f,
-                25.0f,
+                12.0f,
                 0.000001f,
                 0.35f
             ),
@@ -232,63 +213,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     layout.add
     (
         std::make_unique<juce::AudioParameterFloat>(
-            "ScaleFactor",
-            "ScaleFactor",
+            "Hardness",
+            "Hardness",
             juce::NormalisableRange<float>
             (
                 0.0f,
                 1.0f,
                 0.000001f,
                 0.35f
-            ),
-            1.0f
-        )
-    );
-        
-    layout.add
-    (
-        std::make_unique<juce::AudioParameterFloat>(
-            "MaxThreshold",
-            "MaxThreshold",
-            juce::NormalisableRange<float>
-            (
-                0.0f,
-                1.0f,
-                0.000001f,
-                1.5f
-            ),
-            1.0f
-        )
-    );
-
-    layout.add
-    (
-        std::make_unique<juce::AudioParameterFloat>
-        (
-            "Cutoff",
-            "Cutoff",
-            juce::NormalisableRange<float>
-            (
-                20.0f,
-                24000.0f,
-                0.000001f,
-                0.35f
-            ),
-            24000.0f
-        )
-    );
-
-    layout.add
-    (
-        std::make_unique<juce::AudioParameterFloat>(
-            "Threshold",
-            "Threshold",
-            juce::NormalisableRange<float>
-            (
-                0.0f,
-                20.0f,
-                0.000001f,
-                1.0f
             ),
             0.0f
         )
@@ -297,14 +229,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     layout.add
     (
         std::make_unique<juce::AudioParameterFloat>(
-            "PostGain",
-            "PostGain",
+            "Threshold",
+            "Threshold",
             juce::NormalisableRange<float>
             (
-                0.75f,
-                25.0f,
+                0.0f,
+                1.0f,
                 0.000001f,
-                0.35f
+                2.5f
             ),
             1.0f
         )
@@ -313,14 +245,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     layout.add
     (
         std::make_unique<juce::AudioParameterFloat>(
-            "Mix",
-            "Mix",
+            "Squeeze",
+            "Squeeze",
             juce::NormalisableRange<float>
             (
-                0.0f,
-                1.0f,
+                0.75f,
+                12.0f,
                 0.000001f,
-                1.0f
+                0.35f
             ),
             1.0f
         )
@@ -334,14 +266,10 @@ void ExoDistAudioProcessor::updateEffects()
     // get the parameters
     float preGainParameter = *apvts.getRawParameterValue("PreGain");
     
-    float scaleFactorParameter = *apvts.getRawParameterValue("ScaleFactor");
-    float maxThresholdParameter = *apvts.getRawParameterValue("MaxThreshold");
-    
-    float cutoffParameter = *apvts.getRawParameterValue("Cutoff");
-    
+    float hardnessParameter = *apvts.getRawParameterValue("Hardness");
     float thresholdParameter = *apvts.getRawParameterValue("Threshold");
     
-    float postGainParameter = *apvts.getRawParameterValue("PostGain");
+    float squeezeParameter = *apvts.getRawParameterValue("Squeeze");
 
 
 
@@ -351,21 +279,16 @@ void ExoDistAudioProcessor::updateEffects()
     
     // update exoAlgoProcessor
     auto& exoAlgoProcessor = processorChain.template get<exoAlgoIndex>();
-    exoAlgoProcessor.setScaleFactor(scaleFactorParameter);
-    exoAlgoProcessor.setMaxThreshold(maxThresholdParameter);
-
-    // update the filter
-    auto& filter = processorChain.template get<filterIndex>();
-    filter.setCutoffFrequencyHz(cutoffParameter);
-    filter.setResonance((1-(cutoffParameter/24000))*0.25);
+    exoAlgoProcessor.setScaleFactor(hardnessParameter);
+    exoAlgoProcessor.setMaxThreshold(thresholdParameter);
 
     // update the limiter
     auto& limiter = processorChain.template get<limiterIndex>();
-    limiter.setThreshold(thresholdParameter);
+    limiter.setThreshold(squeezeParameter*0.5);
     
     // update postGain
     auto& postGain = processorChain.template get<postGainIndex>();
-    postGain.setGainLinear(postGainParameter);
+    postGain.setGainLinear(squeezeParameter);
 }
 
 void ExoDistAudioProcessor::initializeEffects()
@@ -381,13 +304,13 @@ void ExoDistAudioProcessor::initializeEffects()
 
     // initialize filter
     auto& filter = processorChain.template get<filterIndex>();
-    filter.setCutoffFrequencyHz(20000.0f);
-    filter.setResonance(1.0f);
+    filter.setCutoffFrequencyHz(20000);
+    filter.setResonance(0.0f);
 
     // initialize limiter
     auto& limiter = processorChain.template get<limiterIndex>();
     limiter.setThreshold(0.0f);
-    limiter.setRelease(800.0f);
+    limiter.setRelease(400.0f);
     
     // initialize postGain
     auto& postGain = processorChain.template get<postGainIndex>();
