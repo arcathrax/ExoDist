@@ -21,30 +21,33 @@ struct CustomRotarySlider : juce::Slider
     {
     }
 
-    // Überschreiben der paint-Methode
-    void paint (juce::Graphics& g) override
+    void paint(juce::Graphics& g) override
     {
         const float diameter = juce::jmin(getWidth(), getHeight());
         const float radius = diameter / 2.0f;
         const float centerX = getWidth() / 2.0f;
         const float centerY = getHeight() / 2.0f;
 
+        // Hintergrundkreis
         g.setColour(juce::Colour(0xFF1a1a19));
         g.fillEllipse(centerX - radius, centerY - radius, diameter, diameter);
 
+        // Rahmen
+        g.setColour(juce::Colour(0xFF4f8131));
+        g.drawEllipse(centerX - radius, centerY - radius, diameter, diameter, 2.0f);
+
+        // Zeiger
         float value = getValue();
         float minValue = getMinimum();
         float maxValue = getMaximum();
-
         float normalizedValue = (value - minValue) / (maxValue - minValue);
-
-        float angle = (normalizedValue*5)-(juce::MathConstants<float>::pi*1.25);
+        float angle = (normalizedValue * 5) - (juce::MathConstants<float>::pi * 1.25);
 
         const float endX = centerX + radius * std::cos(angle);
         const float endY = centerY + radius * std::sin(angle);
 
         g.setColour(juce::Colour(0xFF4f8131));
-        g.drawLine(centerX, centerY, endX, endY, getWidth()*0.03);
+        g.drawLine(centerX, centerY, endX, endY, getWidth() * 0.03);
     }
 };
 
@@ -68,11 +71,17 @@ private:
     ExoDistAudioProcessor& audioProcessor;
 
     // defining the sliders
+    CustomRotarySlider preGainSlider,
+        hardnessSlider,
+        thresholdSlider;
 
     using APVTS = juce::AudioProcessorValueTreeState;
     using Attachment = APVTS::SliderAttachment;
 
     // defining the slider attachments
+    Attachment preGainSliderAttachment,
+        hardnessSliderAttachment,
+        thresholdSliderAttachment;
 
     std::vector<juce::Component*> getComps();
     

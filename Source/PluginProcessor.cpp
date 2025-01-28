@@ -169,8 +169,8 @@ bool ExoDistAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* ExoDistAudioProcessor::createEditor()
 {
-    // return new ExoDistAudioProcessorEditor (*this);
-    return new juce::GenericAudioProcessorEditor(*this);
+    return new ExoDistAudioProcessorEditor (*this);
+    // return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
