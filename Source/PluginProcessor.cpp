@@ -220,7 +220,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
                 0.0f,
                 1.0f,
                 0.000001f,
-                0.35f
+                0.5f
             ),
             0.0f
         )
@@ -236,7 +236,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
                 0.0f,
                 1.0f,
                 0.000001f,
-                2.5f
+                0.5f
             ),
             1.0f
         )
