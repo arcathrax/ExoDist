@@ -218,7 +218,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             juce::NormalisableRange<float>
             (
                 0.0f,
-                1.0f,
+                5.0f,
                 0.000001f,
                 0.5f
             ),
@@ -241,22 +241,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             1.0f
         )
     );
-        
-    layout.add
-    (
-        std::make_unique<juce::AudioParameterFloat>(
-            "Squeeze",
-            "Squeeze",
-            juce::NormalisableRange<float>
-            (
-                0.75f,
-                12.0f,
-                0.000001f,
-                0.35f
-            ),
-            1.0f
-        )
-    );
 
     return layout;
 }
@@ -268,8 +252,6 @@ void ExoDistAudioProcessor::updateEffects()
     
     float hardnessParameter = *apvts.getRawParameterValue("Hardness");
     float thresholdParameter = *apvts.getRawParameterValue("Threshold");
-    
-    float squeezeParameter = *apvts.getRawParameterValue("Squeeze");
 
 
 
@@ -282,13 +264,11 @@ void ExoDistAudioProcessor::updateEffects()
     exoAlgoProcessor.setScaleFactor(hardnessParameter);
     exoAlgoProcessor.setMaxThreshold(thresholdParameter);
 
-    // update the limiter
-    auto& limiter = processorChain.template get<limiterIndex>();
-    limiter.setThreshold(squeezeParameter*0.5);
-    
     // update postGain
     auto& postGain = processorChain.template get<postGainIndex>();
-    postGain.setGainLinear(squeezeParameter);
+    postGain.setGainDecibels(thresholdParameter*24);
+    
+    // update the limiter
 }
 
 void ExoDistAudioProcessor::initializeEffects()
@@ -307,14 +287,14 @@ void ExoDistAudioProcessor::initializeEffects()
     filter.setCutoffFrequencyHz(20000);
     filter.setResonance(0.0f);
 
+    // initialize postGain
+    auto& postGain = processorChain.template get<postGainIndex>();
+    postGain.setGainDecibels(juce::Decibels::gainToDecibels(1.0f));
+    
     // initialize limiter
     auto& limiter = processorChain.template get<limiterIndex>();
     limiter.setThreshold(0.0f);
     limiter.setRelease(400.0f);
-    
-    // initialize postGain
-    auto& postGain = processorChain.template get<postGainIndex>();
-    postGain.setGainDecibels(juce::Decibels::gainToDecibels(1.0f));
 }
 
 //==============================================================================
