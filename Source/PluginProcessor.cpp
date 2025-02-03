@@ -197,7 +197,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     layout.add
     (
         std::make_unique<juce::AudioParameterFloat>(
-            "PreGain",
+            juce::ParameterID { "PreGain", 1 },
             "PreGain",
             juce::NormalisableRange<float>
             (
@@ -213,7 +213,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     layout.add
     (
         std::make_unique<juce::AudioParameterFloat>(
-            "Hardness",
+            juce::ParameterID { "Hardness", 1 },
             "Hardness",
             juce::NormalisableRange<float>
             (
@@ -229,7 +229,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     layout.add
     (
         std::make_unique<juce::AudioParameterFloat>(
-            "Threshold",
+            juce::ParameterID { "Threshold", 1 },
             "Threshold",
             juce::NormalisableRange<float>
             (
