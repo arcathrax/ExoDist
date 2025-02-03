@@ -16,7 +16,7 @@ ExoDistAudioProcessorEditor::ExoDistAudioProcessorEditor(ExoDistAudioProcessor& 
     hardnessSliderAttachment(audioProcessor.apvts, "Hardness", hardnessSlider),
     thresholdSliderAttachment(audioProcessor.apvts, "Threshold", thresholdSlider)
 {
-    // Slider hinzufügen
+    // Slider hinzufÃ¼gen
     for (auto* comp : getComps())
     {
         addAndMakeVisible(comp);
@@ -34,21 +34,19 @@ ExoDistAudioProcessorEditor::~ExoDistAudioProcessorEditor()
 //==============================================================================
 void ExoDistAudioProcessorEditor::paint(juce::Graphics& g)
 {
-    // Hintergrund
-    juce::ColourGradient gradient(
-        juce::Colour(HighlightColor), getWidth() / 2.0f, getHeight() / 2.0f,
-        juce::Colour(TitleColor), 0, 0, true
-    );
-
-    g.setGradientFill(gradient);
-    g.fillAll();
+    g.fillAll(juce::Colour(BackgroundColor));
 }
 void ExoDistAudioProcessorEditor::resized()
 {
     auto fullBounds = getBounds();
-    auto leftPart = fullBounds.removeFromLeft(fullBounds.getWidth() * 0.33);
-    auto rightPart = fullBounds.removeFromRight(fullBounds.getWidth() * 0.5);
-    auto middlePart = fullBounds;
+    
+    auto titleSection = fullBounds.removeFromTop(fullBounds.getHeight()*0.23);
+    auto knobsSection = fullBounds.removeFromTop(fullBounds.getHeight()*0.85);
+    auto bottomSection = fullBounds;
+    
+    auto leftPart = knobsSection.removeFromLeft(knobsSection.getWidth() * 0.25);
+    auto rightPart = knobsSection.removeFromRight(knobsSection.getWidth() * 0.33);
+    auto middlePart = knobsSection;
 
     hardnessSlider.setBounds(leftPart);
     preGainSlider.setBounds(middlePart);
