@@ -22,6 +22,9 @@ ExoDistAudioProcessorEditor::ExoDistAudioProcessorEditor(ExoDistAudioProcessor& 
         addAndMakeVisible(comp);
     }
 
+    addAndMakeVisible(titleComponent);
+    addAndMakeVisible(footerComponent);
+    
     setSize(600, 400);
 }
 
@@ -51,6 +54,9 @@ void ExoDistAudioProcessorEditor::resized()
     hardnessSlider.setBounds(leftPart);
     preGainSlider.setBounds(middlePart);
     thresholdSlider.setBounds(rightPart);
+    
+    titleComponent.setBounds(titleSection);
+    footerComponent.setBounds(bottomSection);
 }
 
 

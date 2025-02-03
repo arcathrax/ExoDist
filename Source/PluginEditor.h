@@ -10,6 +10,8 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "UI/TitleComponent.h"
+#include "UI/FooterComponent.h"
 
 struct CustomRotarySlider : juce::Slider
 {
@@ -61,7 +63,8 @@ private:
     juce::uint32 TitleColor = 0xFF4f8131;
     juce::uint32 HighlightColor = 0xFF1a1a19;
     
-    
+    TitleComponent titleComponent;
+    FooterComponent footerComponent;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExoDistAudioProcessorEditor)

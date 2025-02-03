@@ -7,6 +7,16 @@
               pluginManufacturerCode="Arca" pluginCode="Exod" pluginAAXCategory="64">
   <MAINGROUP id="hxuzgT" name="ExoDist">
     <GROUP id="{2DD5CF52-4D58-22A5-B87E-A6843374F68E}" name="Source">
+      <GROUP id="{A8F3DDCA-6F5C-F341-367F-846C31277AA1}" name="UI">
+        <FILE id="maX5vv" name="FooterComponent.cpp" compile="1" resource="0"
+              file="Source/UI/FooterComponent.cpp"/>
+        <FILE id="D1Izp6" name="FooterComponent.h" compile="0" resource="0"
+              file="Source/UI/FooterComponent.h"/>
+        <FILE id="QRHl7H" name="TitleComponent.cpp" compile="1" resource="0"
+              file="Source/UI/TitleComponent.cpp"/>
+        <FILE id="yhFFPb" name="TitleComponent.h" compile="0" resource="0"
+              file="Source/UI/TitleComponent.h"/>
+      </GROUP>
       <GROUP id="{1C83E6E9-F158-5067-4222-E8D43A293597}" name="DSP">
         <FILE id="yVeiab" name="ExoAlgoProcessor.cpp" compile="1" resource="0"
               file="Source/DSP/ExoAlgoProcessor.cpp"/>
