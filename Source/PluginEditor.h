@@ -58,11 +58,6 @@ private:
 
     std::vector<juce::Component*> getComps();
     
-    juce::uint32 BackgroundColor = 0xFFf6fcdf;
-    juce::uint32 ContentColor = 0xFF80993c;
-    juce::uint32 TitleColor = 0xFF4f8131;
-    juce::uint32 HighlightColor = 0xFF1a1a19;
-    
     TitleComponent titleComponent;
     FooterComponent footerComponent;
 

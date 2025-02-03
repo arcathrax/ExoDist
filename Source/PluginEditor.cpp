@@ -37,7 +37,7 @@ ExoDistAudioProcessorEditor::~ExoDistAudioProcessorEditor()
 //==============================================================================
 void ExoDistAudioProcessorEditor::paint(juce::Graphics& g)
 {
-    g.fillAll(juce::Colour(BackgroundColor));
+    g.fillAll(juce::Colour(0xFF1a1a19));
 }
 void ExoDistAudioProcessorEditor::resized()
 {
@@ -50,7 +50,7 @@ void ExoDistAudioProcessorEditor::resized()
     auto leftPart = knobsSection.removeFromLeft(knobsSection.getWidth() * 0.25);
     auto rightPart = knobsSection.removeFromRight(knobsSection.getWidth() * 0.33);
     auto middlePart = knobsSection;
-
+    
     hardnessSlider.setBounds(leftPart);
     preGainSlider.setBounds(middlePart);
     thresholdSlider.setBounds(rightPart);
