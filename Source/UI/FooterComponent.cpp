@@ -27,7 +27,7 @@ void FooterComponent::paint (juce::Graphics& g)
 {
     juce::ColourGradient gradient(
         juce::Colour(0xFF1a1a19), 0, 0,
-        juce::Colour(0xFF1a1a19), 0, getHeight(),
+        juce::Colour(0xFF141414), 0, getHeight(),
         false
     );
     
@@ -35,9 +35,9 @@ void FooterComponent::paint (juce::Graphics& g)
     g.fillRect(getLocalBounds());
 
     g.setColour(juce::Colour(0xFF4f8131));
-    g.setFont (juce::FontOptions (10.0f));
+    g.setFont (juce::FontOptions (15.0f));
     g.drawText ("arcathrax productions", getLocalBounds(),
-                juce::Justification::bottomLeft, true);
+                juce::Justification::centredBottom, true);
 }
 
 void FooterComponent::resized()

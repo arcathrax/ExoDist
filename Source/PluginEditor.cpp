@@ -42,16 +42,21 @@ void ExoDistAudioProcessorEditor::resized()
     auto fullBounds = getBounds();
     
     auto titleSection = fullBounds.removeFromTop(fullBounds.getHeight()*0.23);
-    auto knobsSection = fullBounds.removeFromTop(fullBounds.getHeight()*0.85);
+    auto contentSection = fullBounds.removeFromTop(fullBounds.getHeight()*0.85);
     auto bottomSection = fullBounds;
     
-    auto leftPart = knobsSection.removeFromLeft(knobsSection.getWidth() * 0.25);
-    auto rightPart = knobsSection.removeFromRight(knobsSection.getWidth() * 0.33);
-    auto middlePart = knobsSection;
-    
-    hardnessSlider.setBounds(leftPart);
-    preGainSlider.setBounds(middlePart);
-    thresholdSlider.setBounds(rightPart);
+    auto knobsSection = contentSection.removeFromLeft(contentSection.getWidth() * 0.33);
+    auto visualisationSection = contentSection.removeFromRight(contentSection.getWidth());
+
+    auto topKnobsSection = knobsSection.removeFromTop(knobsSection.getHeight()*0.5);
+    auto bottomKnobsSection = knobsSection;
+
+    auto topLeftKnobsSection = topKnobsSection.removeFromLeft(topKnobsSection.getWidth() * 0.5);
+    auto topRightKnobsSection = topKnobsSection;
+
+    hardnessSlider.setBounds(topLeftKnobsSection);
+    preGainSlider.setBounds(bottomKnobsSection);
+    thresholdSlider.setBounds(topRightKnobsSection);
     
     titleComponent.setBounds(titleSection);
     footerComponent.setBounds(bottomSection);
