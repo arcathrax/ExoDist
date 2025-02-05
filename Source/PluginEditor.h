@@ -12,6 +12,7 @@
 #include "PluginProcessor.h"
 #include "UI/TitleComponent.h"
 #include "UI/FooterComponent.h"
+#include "UI/ExoLookAndFeel.h"
 
 struct CustomRotarySlider : juce::Slider
 {
@@ -42,6 +43,9 @@ public:
 
 private:
     ExoDistAudioProcessor& audioProcessor;
+
+    // defining custom look and feel
+    ExoLookAndFeel exoLookAndFeel;
 
     // defining the sliders
     CustomRotarySlider preGainSlider,

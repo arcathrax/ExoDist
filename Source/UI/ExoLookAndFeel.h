@@ -9,3 +9,14 @@
 */
 
 #pragma once
+#include <JuceHeader.h>
+
+class ExoLookAndFeel : public juce::LookAndFeel_V4
+{
+public:
+	ExoLookAndFeel();
+	~ExoLookAndFeel();
+
+private:
+
+};

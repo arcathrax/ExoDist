@@ -9,3 +9,11 @@
 */
 
 #include "ExoLookAndFeel.h"
+ExoLookAndFeel::ExoLookAndFeel()
+{
+    setColour(juce::Slider::rotarySliderOutlineColourId, juce::Colour(0xFFf6fcdf));
+}
+
+ExoLookAndFeel::~ExoLookAndFeel()
+{
+}

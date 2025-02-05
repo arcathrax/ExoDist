@@ -20,6 +20,7 @@ ExoDistAudioProcessorEditor::ExoDistAudioProcessorEditor(ExoDistAudioProcessor& 
     for (auto* comp : getComps())
     {
         addAndMakeVisible(comp);
+        comp->setLookAndFeel(&exoLookAndFeel);
     }
     
     setSize(600, 400);
