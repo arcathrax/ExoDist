@@ -21,9 +21,6 @@ ExoDistAudioProcessorEditor::ExoDistAudioProcessorEditor(ExoDistAudioProcessor& 
     {
         addAndMakeVisible(comp);
     }
-
-    addAndMakeVisible(titleComponent);
-    addAndMakeVisible(footerComponent);
     
     setSize(600, 400);
 }
@@ -66,6 +63,8 @@ std::vector<juce::Component*> ExoDistAudioProcessorEditor::getComps()
     {
         &preGainSlider,
         &hardnessSlider,
-        &thresholdSlider
+        &thresholdSlider,
+        &titleComponent,
+        &footerComponent
     };
 }
