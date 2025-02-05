@@ -17,10 +17,6 @@
                 file="Source/UI/TitleComponent.cpp"/>
           <FILE id="yhFFPb" name="TitleComponent.h" compile="0" resource="0"
                 file="Source/UI/TitleComponent.h"/>
-          <FILE id="CyguAD" name="WaveformDisplay.cpp" compile="1" resource="0"
-                file="Source/UI/WaveformDisplay.cpp"/>
-          <FILE id="poXosu" name="WaveformDisplay.h" compile="0" resource="0"
-                file="Source/UI/WaveformDisplay.h"/>
         </GROUP>
         <FILE id="xmwrYz" name="ExoLookAndFeel.cpp" compile="1" resource="0"
               file="Source/UI/ExoLookAndFeel.cpp"/>
