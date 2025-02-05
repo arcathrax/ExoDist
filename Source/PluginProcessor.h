@@ -78,10 +78,10 @@ private:
         juce::dsp::LadderFilter<float>
     >;
 
-    ProcessorChain processorChain;
+    ProcessorChain leftChain, rightChain;
 
-    void updateEffects();
-    void initializeEffects();
+    void updateEffects(ProcessorChain& processorChain);
+    void initializeEffects(ProcessorChain& processorChain);
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ExoDistAudioProcessor);
 };

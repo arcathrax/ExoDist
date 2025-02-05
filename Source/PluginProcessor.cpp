@@ -22,7 +22,8 @@ ExoDistAudioProcessor::ExoDistAudioProcessor()
     )
 #endif
 {
-    initializeEffects();
+    initializeEffects(leftChain);
+    initializeEffects(rightChain);
 }
 
 ExoDistAudioProcessor::~ExoDistAudioProcessor()
@@ -101,10 +102,12 @@ void ExoDistAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     spec.sampleRate = sampleRate;
 
     // setup the processorchain
-    processorChain.prepare(spec);
+    leftChain.prepare(spec);
+    rightChain.prepare(spec);
     
     // updating the processorChain configurations
-    updateEffects();
+    updateEffects(leftChain);
+    updateEffects(rightChain);
 }
 
 void ExoDistAudioProcessor::releaseResources()
@@ -147,16 +150,21 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     
     // clear the buffer
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-    buffer.clear (i, 0, buffer.getNumSamples());
+    {
+        buffer.clear(i, 0, buffer.getNumSamples());
+    }
+
 
     juce::dsp::AudioBlock<float> block(buffer);
     juce::dsp::ProcessContextReplacing<float> context(block);
 
     // updating the processorChain configurations
-    updateEffects();
+    updateEffects(leftChain);
+    updateEffects(rightChain);
     
     // processing the signal
-    processorChain.process(context);
+    leftChain.process(context);
+    rightChain.process(context);
 
     rmsLevelLeft = juce::Decibels::gainToDecibels(buffer.getRMSLevel(0, 0, buffer.getNumSamples()));
     rmsLevelRight = juce::Decibels::gainToDecibels(buffer.getRMSLevel(1, 0, buffer.getNumSamples()));
@@ -257,12 +265,12 @@ float ExoDistAudioProcessor::getRmsValue(const int channel) const
     }    
     if (channel == 1)
     {
-        return rmsLevelLeft;
+        return rmsLevelRight;
     }
     return 0.0f;
 }
 
-void ExoDistAudioProcessor::updateEffects()
+void ExoDistAudioProcessor::updateEffects(ProcessorChain& processorChain)
 {
     // get the parameters
     float preGainParameter = *apvts.getRawParameterValue("PreGain");
@@ -288,7 +296,7 @@ void ExoDistAudioProcessor::updateEffects()
     // update the limiter
 }
 
-void ExoDistAudioProcessor::initializeEffects()
+void ExoDistAudioProcessor::initializeEffects(ProcessorChain& processorChain)
 {
     // initialize preGain
     auto& preGain = processorChain.template get<preGainIndex>();
