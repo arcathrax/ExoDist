@@ -13,6 +13,7 @@
 #include "UI/Components/TitleComponent.h"
 #include "UI/Components/FooterComponent.h"
 #include "UI/ExoLookAndFeel.h"
+#include "UI/Components/VerticalMeter.h"
 
 struct CustomRotarySlider : juce::Slider
 {
@@ -31,13 +32,14 @@ struct CustomRotarySlider : juce::Slider
 //==============================================================================
 /**
 */
-class ExoDistAudioProcessorEditor  : public juce::AudioProcessorEditor
+class ExoDistAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer
 {
 public:
     ExoDistAudioProcessorEditor (ExoDistAudioProcessor&);
     ~ExoDistAudioProcessorEditor() override;
 
     //==============================================================================
+    void timerCallback() override;
     void paint (juce::Graphics&) override;
     void resized() override;
 
@@ -51,6 +53,9 @@ private:
     CustomRotarySlider preGainSlider,
         hardnessSlider,
         thresholdSlider;
+
+    // defining the level meters
+    VerticalMeter verticalMeterLeft, verticalMeterRight;
 
     using APVTS = juce::AudioProcessorValueTreeState;
     using Attachment = APVTS::SliderAttachment;

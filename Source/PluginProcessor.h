@@ -57,7 +57,10 @@ public:
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     juce::AudioProcessorValueTreeState apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
+    float getRmsValue(const int channel) const;
 private:
+    float rmsLevelLeft, rmsLevelRight;
+
     enum
     {
         preGainIndex,

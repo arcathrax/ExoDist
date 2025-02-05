@@ -157,6 +157,9 @@ void ExoDistAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce:
     
     // processing the signal
     processorChain.process(context);
+
+    rmsLevelLeft = juce::Decibels::gainToDecibels(buffer.getRMSLevel(0, 0, buffer.getNumSamples()));
+    rmsLevelRight = juce::Decibels::gainToDecibels(buffer.getRMSLevel(1, 0, buffer.getNumSamples()));
 }
 
 
@@ -243,6 +246,20 @@ juce::AudioProcessorValueTreeState::ParameterLayout
     );
 
     return layout;
+}
+
+float ExoDistAudioProcessor::getRmsValue(const int channel) const
+{
+    jassert(channel == 0 || channel == 1);
+    if (channel == 0)
+    {
+        return rmsLevelLeft;
+    }    
+    if (channel == 1)
+    {
+        return rmsLevelLeft;
+    }
+    return 0.0f;
 }
 
 void ExoDistAudioProcessor::updateEffects()

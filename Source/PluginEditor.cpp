@@ -24,12 +24,22 @@ ExoDistAudioProcessorEditor::ExoDistAudioProcessorEditor(ExoDistAudioProcessor& 
     }
     
     setSize(600, 400);
+    startTimerHz(20);
 }
 
 ExoDistAudioProcessorEditor::~ExoDistAudioProcessorEditor()
 {
     auto bounds = getLocalBounds();
     preGainSlider.setBounds(bounds);
+}
+
+void ExoDistAudioProcessorEditor::timerCallback()
+{
+    verticalMeterLeft.setLevel(audioProcessor.getRmsValue(0));
+    verticalMeterRight.setLevel(audioProcessor.getRmsValue(1));
+
+    verticalMeterLeft.repaint();
+    verticalMeterRight.repaint();
 }
 
 //==============================================================================
@@ -45,7 +55,7 @@ void ExoDistAudioProcessorEditor::resized()
     auto contentSection = fullBounds.removeFromTop(fullBounds.getHeight()*0.85);
     auto bottomSection = fullBounds;
     
-    auto knobsSection = contentSection.removeFromLeft(contentSection.getWidth() * 0.33);
+    auto knobsSection = contentSection.removeFromLeft(contentSection.getWidth() * 0.66);
     auto visualisationSection = contentSection.removeFromRight(contentSection.getWidth());
 
     auto topKnobsSection = knobsSection.removeFromTop(knobsSection.getHeight()*0.5);
@@ -54,12 +64,20 @@ void ExoDistAudioProcessorEditor::resized()
     auto topLeftKnobsSection = topKnobsSection.removeFromLeft(topKnobsSection.getWidth() * 0.5);
     auto topRightKnobsSection = topKnobsSection;
 
+    auto verticalMetersSection = visualisationSection.removeFromRight(visualisationSection.getWidth()*0.25);
+
+    auto verticalMeterLeftSection = verticalMetersSection.removeFromLeft(verticalMetersSection.getWidth()*0.5).reduced(5.f);
+    auto verticalMeterRightSection = verticalMetersSection.reduced(5.f);
+
     hardnessSlider.setBounds(topLeftKnobsSection);
     preGainSlider.setBounds(bottomKnobsSection);
     thresholdSlider.setBounds(topRightKnobsSection);
     
     titleComponent.setBounds(titleSection);
     footerComponent.setBounds(bottomSection);
+
+    verticalMeterLeft.setBounds(verticalMeterLeftSection);
+    verticalMeterRight.setBounds(verticalMeterRightSection);
 }
 
 
@@ -71,6 +89,8 @@ std::vector<juce::Component*> ExoDistAudioProcessorEditor::getComps()
         &hardnessSlider,
         &thresholdSlider,
         &titleComponent,
-        &footerComponent
+        &footerComponent,
+        &verticalMeterLeft,
+        &verticalMeterRight
     };
 }
