@@ -2,10 +2,9 @@
 
 <JUCERPROJECT id="ZaZn2g" name="ExoDist" projectType="audioplug" useAppConfig="0"
               jucerFormatVersion="1" version="0.4.0" pluginFormats="buildAU,buildStandalone,buildVST3"
-              pluginVST3Category="Distortion,Fx" companyName="arcathrax productions"
-              companyEmail="arcathrax@proton.me" pluginManufacturerCode="Arca"
-              pluginCode="Exod" pluginAAXCategory="64" companyWebsite="www.arcathrax.github.io"
-              pluginDesc="A distortion plugin for your needs.">
+              pluginVST3Category="Fx" companyName="arcathrax productions" companyEmail="arcathrax@proton.me"
+              pluginManufacturerCode="Arca" pluginCode="Exod" pluginAAXCategory="64"
+              companyWebsite="www.arcathrax.github.io" pluginDesc="A distortion plugin for your needs.">
   <MAINGROUP id="hxuzgT" name="ExoDist">
     <GROUP id="{2DD5CF52-4D58-22A5-B87E-A6843374F68E}" name="Source">
       <GROUP id="{A8F3DDCA-6F5C-F341-367F-846C31277AA1}" name="UI">

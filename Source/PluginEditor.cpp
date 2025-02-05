@@ -25,6 +25,7 @@ ExoDistAudioProcessorEditor::ExoDistAudioProcessorEditor(ExoDistAudioProcessor& 
     
     setSize(600, 400);
     startTimerHz(20);
+    setAlwaysOnTop(false);
 }
 
 ExoDistAudioProcessorEditor::~ExoDistAudioProcessorEditor()
