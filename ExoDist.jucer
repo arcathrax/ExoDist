@@ -10,13 +10,13 @@
       <GROUP id="{A8F3DDCA-6F5C-F341-367F-846C31277AA1}" name="UI">
         <GROUP id="{A96C08F0-6B0E-D163-E138-865C76B46601}" name="Components">
           <FILE id="maX5vv" name="FooterComponent.cpp" compile="1" resource="0"
-                file="Source/UI/FooterComponent.cpp"/>
+                file="Source/UI/Components/FooterComponent.cpp"/>
           <FILE id="D1Izp6" name="FooterComponent.h" compile="0" resource="0"
-                file="Source/UI/FooterComponent.h"/>
+                file="Source/UI/Components/FooterComponent.h"/>
           <FILE id="QRHl7H" name="TitleComponent.cpp" compile="1" resource="0"
-                file="Source/UI/TitleComponent.cpp"/>
+                file="Source/UI/Components/TitleComponent.cpp"/>
           <FILE id="yhFFPb" name="TitleComponent.h" compile="0" resource="0"
-                file="Source/UI/TitleComponent.h"/>
+                file="Source/UI/Components/TitleComponent.h"/>
         </GROUP>
         <FILE id="xmwrYz" name="ExoLookAndFeel.cpp" compile="1" resource="0"
               file="Source/UI/ExoLookAndFeel.cpp"/>

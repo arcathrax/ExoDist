@@ -218,11 +218,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout
             juce::NormalisableRange<float>
             (
                 0.0f,
-                5.0f,
+                1.0f,
                 0.000001f,
                 0.5f
             ),
-            0.0f
+            1.0f
         )
     );
         
@@ -284,7 +284,7 @@ void ExoDistAudioProcessor::initializeEffects()
 
     // initialize filter
     auto& filter = processorChain.template get<filterIndex>();
-    filter.setCutoffFrequencyHz(getSampleRate()/2);
+    filter.setCutoffFrequencyHz(48000.f);
     filter.setResonance(0.0f);
 
     // initialize postGain
