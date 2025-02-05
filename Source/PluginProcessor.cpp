@@ -284,7 +284,7 @@ void ExoDistAudioProcessor::initializeEffects()
 
     // initialize filter
     auto& filter = processorChain.template get<filterIndex>();
-    filter.setCutoffFrequencyHz(20000);
+    filter.setCutoffFrequencyHz(getSampleRate()/2);
     filter.setResonance(0.0f);
 
     // initialize postGain
