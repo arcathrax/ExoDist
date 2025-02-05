@@ -26,13 +26,24 @@ void ExoLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width
     auto outline = slider.findColour(juce::Slider::rotarySliderOutlineColourId);
     auto fill = slider.findColour(juce::Slider::rotarySliderFillColourId);
 
-    auto bounds = juce::Rectangle<int>(x, y, width, height).toFloat().reduced(10);
+    // scale the slider if hovered over
+    bool isInteracting = slider.isMouseOverOrDragging();
+    float scaleFactor = isInteracting ? 0.98f : 1.0f;
+
+    // calculate scaled bounds
+    int scaledWidth = static_cast<int>(width * scaleFactor);
+    int scaledHeight = static_cast<int>(height * scaleFactor);
+
+    auto bounds = juce::Rectangle<int>(x + (width - scaledWidth) / 2,
+        y + (height - scaledHeight) / 2,
+        scaledWidth, scaledHeight).toFloat().reduced(10);
 
     auto radius = juce::jmin(bounds.getWidth(), bounds.getHeight()) / 2.0f;
     auto toAngle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
     auto lineW = juce::jmin(8.0f, radius * 0.5f);
     auto arcRadius = radius - lineW * 0.5f;
 
+    // draw background circle
     juce::Path backgroundArc;
     backgroundArc.addCentredArc(bounds.getCentreX(),
         bounds.getCentreY(),
@@ -58,11 +69,14 @@ void ExoLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width
             toAngle,
             true);
 
-        g.setColour(fill);
+        juce::ColourGradient gradient(fill.darker(1.2f), bounds.getCentreX() - arcRadius, bounds.getCentreY(),
+            fill, bounds.getCentreX() + arcRadius, bounds.getCentreY(), false);
+        g.setGradientFill(gradient);
         g.strokePath(valueArc, juce::PathStrokeType(lineW, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
     }
 
-    auto thumbWidth = lineW * 2.0f;
+    // thumb
+    auto thumbWidth = lineW * 2.f * scaleFactor;
     juce::Point<float> thumbPoint(bounds.getCentreX() + arcRadius * std::cos(toAngle - juce::MathConstants<float>::halfPi),
         bounds.getCentreY() + arcRadius * std::sin(toAngle - juce::MathConstants<float>::halfPi));
 
