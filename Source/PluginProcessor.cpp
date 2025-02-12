@@ -288,12 +288,6 @@ void ExoDistAudioProcessor::updateEffects(ProcessorChain& processorChain)
     auto& exoAlgoProcessor = processorChain.template get<exoAlgoIndex>();
     exoAlgoProcessor.setScaleFactor(hardnessParameter);
     exoAlgoProcessor.setMaxThreshold(thresholdParameter);
-
-    // update postGain
-    auto& postGain = processorChain.template get<postGainIndex>();
-    postGain.setGainDecibels(thresholdParameter*24);
-    
-    // update the limiter
 }
 
 void ExoDistAudioProcessor::initializeEffects(ProcessorChain& processorChain)
@@ -306,20 +300,6 @@ void ExoDistAudioProcessor::initializeEffects(ProcessorChain& processorChain)
     auto& exoAlgoProcessor = processorChain.template get<exoAlgoIndex>();
     exoAlgoProcessor.setScaleFactor(1.0f);
     exoAlgoProcessor.setMaxThreshold(1.0f);
-
-    // initialize filter
-    auto& filter = processorChain.template get<filterIndex>();
-    filter.setCutoffFrequencyHz(48000.f);
-    filter.setResonance(0.0f);
-
-    // initialize postGain
-    auto& postGain = processorChain.template get<postGainIndex>();
-    postGain.setGainDecibels(juce::Decibels::gainToDecibels(1.0f));
-    
-    // initialize limiter
-    auto& limiter = processorChain.template get<limiterIndex>();
-    limiter.setThreshold(0.0f);
-    limiter.setRelease(400.0f);
 }
 
 //==============================================================================

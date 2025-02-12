@@ -64,18 +64,12 @@ private:
     enum
     {
         preGainIndex,
-        exoAlgoIndex,
-        postGainIndex,
-        limiterIndex,
-        filterIndex
+        exoAlgoIndex
     };
     
     using ProcessorChain = juce::dsp::ProcessorChain<
         juce::dsp::Gain<float>,
-        ExoAlgoProcessor<float>,
-        juce::dsp::Gain<float>,
-        juce::dsp::Limiter<float>,
-        juce::dsp::LadderFilter<float>
+        ExoAlgoProcessor<float>
     >;
 
     ProcessorChain leftChain, rightChain;
