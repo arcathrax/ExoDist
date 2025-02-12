@@ -38,7 +38,7 @@ void FooterComponent::paint (juce::Graphics& g)
 
     g.setColour(juce::Colour(0xFF4f8131));
     g.setFont (TimesNewRoman);
-    g.drawText ("arcathrax productions", getLocalBounds(),
+    g.drawText ("ExoZern", getLocalBounds(),
                 juce::Justification::centred, true);
 }
 

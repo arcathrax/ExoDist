@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="ZaZn2g" name="ExoDist" projectType="audioplug" useAppConfig="0"
-              jucerFormatVersion="1" version="0.4.0" pluginFormats="buildAU,buildStandalone,buildVST3"
-              pluginVST3Category="Fx" companyName="arcathrax productions" companyEmail="arcathrax@proton.me"
-              pluginManufacturerCode="Arca" pluginCode="Exod" pluginAAXCategory="64"
+              jucerFormatVersion="1" version="0.4.1" pluginFormats="buildAU,buildStandalone,buildVST3"
+              pluginVST3Category="Fx" companyName="ExoZern" companyEmail="arcathrax@proton.me"
+              pluginManufacturerCode="Exoz" pluginCode="Exod" pluginAAXCategory="64"
               companyWebsite="www.arcathrax.github.io" pluginDesc="A distortion plugin for your needs.">
   <MAINGROUP id="hxuzgT" name="ExoDist">
     <GROUP id="{2DD5CF52-4D58-22A5-B87E-A6843374F68E}" name="Source">
