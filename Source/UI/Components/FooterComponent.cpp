@@ -30,14 +30,16 @@ void FooterComponent::paint (juce::Graphics& g)
         juce::Colour(0xFF141414), 0, getHeight(),
         false
     );
+
+    Font TimesNewRoman("Times New Roman", 10.0f, Font::bold);
     
     g.setGradientFill (gradient);
     g.fillRect(getLocalBounds());
 
     g.setColour(juce::Colour(0xFF4f8131));
-    g.setFont (juce::FontOptions (15.0f));
+    g.setFont (TimesNewRoman);
     g.drawText ("arcathrax productions", getLocalBounds(),
-                juce::Justification::centredBottom, true);
+                juce::Justification::centred, true);
 }
 
 void FooterComponent::resized()

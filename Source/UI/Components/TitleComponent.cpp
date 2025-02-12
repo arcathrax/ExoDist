@@ -31,12 +31,14 @@ void TitleComponent::paint (juce::Graphics& g)
                                   
         false
     );
+
+    Font TimesNewRoman("Times New Roman", 40.0f, Font::bold);
     
     g.setGradientFill (gradient);
     g.fillRect(getLocalBounds());
 
     g.setColour(juce::Colour(0xFF4f8131));
-    g.setFont (juce::FontOptions (40.0f));
+    g.setFont (TimesNewRoman);
     g.drawText ("exodist", getLocalBounds(),
                 juce::Justification::centred, true);
 }

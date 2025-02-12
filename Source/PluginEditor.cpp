@@ -23,9 +23,19 @@ ExoDistAudioProcessorEditor::ExoDistAudioProcessorEditor(ExoDistAudioProcessor& 
         comp->setLookAndFeel(&exoLookAndFeel);
     }
     
-    setSize(600, 400);
+    setSize(500, 400);
     startTimerHz(20);
     setAlwaysOnTop(false);
+
+    preGainLabel.setText("pregain", juce::NotificationType::sendNotification);
+    preGainLabel.setJustificationType(juce::Justification::centred);
+    preGainLabel.setFont(juce::FontOptions(20.0f));
+
+    hardnessLabel.setText("hardness", juce::NotificationType::sendNotification);
+    hardnessLabel.setJustificationType(juce::Justification::centred);
+
+    thresholdLabel.setText("threshold", juce::NotificationType::sendNotification);
+    thresholdLabel.setJustificationType(juce::Justification::centred);
 }
 
 ExoDistAudioProcessorEditor::~ExoDistAudioProcessorEditor()
@@ -51,28 +61,35 @@ void ExoDistAudioProcessorEditor::paint(juce::Graphics& g)
 void ExoDistAudioProcessorEditor::resized()
 {
     auto fullBounds = getBounds();
+        auto titleSection = fullBounds.removeFromTop(fullBounds.getHeight()*0.15);
+        auto contentSection = fullBounds.removeFromTop(fullBounds.getHeight()*0.95);
+        auto bottomSection = fullBounds;
     
-    auto titleSection = fullBounds.removeFromTop(fullBounds.getHeight()*0.23);
-    auto contentSection = fullBounds.removeFromTop(fullBounds.getHeight()*0.85);
-    auto bottomSection = fullBounds;
-    
-    auto knobsSection = contentSection.removeFromLeft(contentSection.getWidth() * 0.66);
+            auto knobsSection = contentSection.removeFromLeft(contentSection.getWidth() * 0.85);
+                auto preGainSection = knobsSection.removeFromLeft(knobsSection.getWidth() * 0.50);
+                    auto preGainSliderSection = preGainSection.removeFromTop(preGainSection.getHeight()*0.75);
+                    auto preGainLabelSection = preGainSection;
+
+                auto hardnessSection = knobsSection.removeFromTop(knobsSection.getHeight()*0.5);
+                    auto hardnessSliderSection = hardnessSection.removeFromTop(hardnessSection.getHeight()*0.75);
+                    auto hardnessLabelSection = hardnessSection;
+
+                auto thresholdSection = knobsSection;
+                    auto thresholdSliderSection = thresholdSection.removeFromTop(thresholdSection.getHeight() * 0.75);
+                    auto thresholdLabelSection = thresholdSection;
+
     auto visualisationSection = contentSection.removeFromRight(contentSection.getWidth());
+    auto verticalMeterLeftSection = visualisationSection.removeFromLeft(visualisationSection.getWidth()*0.5).reduced(10.f);
+    auto verticalMeterRightSection = visualisationSection.reduced(10.f);
 
-    auto topKnobsSection = knobsSection.removeFromTop(knobsSection.getHeight()*0.5);
-    auto bottomKnobsSection = knobsSection;
+    preGainSlider.setBounds(preGainSliderSection);
+    hardnessSlider.setBounds(hardnessSliderSection);
+    thresholdSlider.setBounds(thresholdSliderSection);
 
-    auto topLeftKnobsSection = topKnobsSection.removeFromLeft(topKnobsSection.getWidth() * 0.5);
-    auto topRightKnobsSection = topKnobsSection;
+    preGainLabel.setBounds(preGainLabelSection);
+    hardnessLabel.setBounds(hardnessLabelSection);
+    thresholdLabel.setBounds(thresholdLabelSection);
 
-    auto verticalMetersSection = visualisationSection.removeFromRight(visualisationSection.getWidth()*0.25);
-
-    auto verticalMeterLeftSection = verticalMetersSection.removeFromLeft(verticalMetersSection.getWidth()*0.5).reduced(5.f);
-    auto verticalMeterRightSection = verticalMetersSection.reduced(5.f);
-
-    hardnessSlider.setBounds(topLeftKnobsSection);
-    preGainSlider.setBounds(bottomKnobsSection);
-    thresholdSlider.setBounds(topRightKnobsSection);
     
     titleComponent.setBounds(titleSection);
     footerComponent.setBounds(bottomSection);
@@ -89,8 +106,14 @@ std::vector<juce::Component*> ExoDistAudioProcessorEditor::getComps()
         &preGainSlider,
         &hardnessSlider,
         &thresholdSlider,
+
+        &preGainLabel,
+        &hardnessLabel,
+        &thresholdLabel,
+
         &titleComponent,
         &footerComponent,
+
         &verticalMeterLeft,
         &verticalMeterRight
     };

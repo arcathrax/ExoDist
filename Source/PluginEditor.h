@@ -23,6 +23,22 @@ struct CustomRotarySlider : juce::Slider
         juce::Slider::TextEntryBoxPosition::NoTextBox
     )
     {
+        setVelocityBasedMode(true);
+        setVelocityModeParameters(1, 1, 0.05, true);
+    }
+
+    void mouseDrag(const juce::MouseEvent& event) override
+    {
+        if (event.mods.isShiftDown())
+        {
+            setVelocityModeParameters(0.25, 1, 0.02, true);
+        }
+        else
+        {
+            setVelocityModeParameters(1, 1, 0.05, true);
+        }
+
+        juce::Slider::mouseDrag(event);
     }
 };
 
@@ -53,6 +69,8 @@ private:
     CustomRotarySlider preGainSlider,
         hardnessSlider,
         thresholdSlider;
+
+    juce::Label preGainLabel, hardnessLabel, thresholdLabel;
 
     // defining the level meters
     VerticalMeter verticalMeterLeft, verticalMeterRight;

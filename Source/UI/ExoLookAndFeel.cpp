@@ -27,12 +27,12 @@ void ExoLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width
     auto fill = slider.findColour(juce::Slider::rotarySliderFillColourId);
 
     // scale the slider if hovered over
-    bool isInteracting = slider.isMouseOverOrDragging();
-    float scaleFactor = isInteracting ? 0.98f : 1.0f;
+    bool isInteracting = slider.isMouseButtonDown();
+    float scaleFactor = isInteracting ? 0.9f : 1.0f;
 
     // calculate scaled bounds
-    int scaledWidth = static_cast<int>(width * scaleFactor);
-    int scaledHeight = static_cast<int>(height * scaleFactor);
+    int scaledWidth = static_cast<int>(width);
+    int scaledHeight = static_cast<int>(height);
 
     auto bounds = juce::Rectangle<int>(x + (width - scaledWidth) / 2,
         y + (height - scaledHeight) / 2,
@@ -40,7 +40,7 @@ void ExoLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width
 
     auto radius = juce::jmin(bounds.getWidth(), bounds.getHeight()) / 2.0f;
     auto toAngle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
-    auto lineW = juce::jmin(8.0f, radius * 0.5f);
+    auto lineW = juce::jmin(8.0f, radius * 0.5f );
     auto arcRadius = radius - lineW * 0.5f;
 
     // draw background circle
@@ -72,7 +72,7 @@ void ExoLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width
         juce::ColourGradient gradient(fill.darker(1.2f), bounds.getCentreX() - arcRadius, bounds.getCentreY(),
             fill, bounds.getCentreX() + arcRadius, bounds.getCentreY(), false);
         g.setGradientFill(gradient);
-        g.strokePath(valueArc, juce::PathStrokeType(lineW, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+        g.strokePath(valueArc, juce::PathStrokeType(lineW*scaleFactor, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
     }
 
     // thumb
