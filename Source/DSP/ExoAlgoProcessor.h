@@ -94,7 +94,7 @@ private:
 
 
             float thresholdDifference = maxThreshold - softenThreshold;
-            float linearValue = normalizeBetweenThresholds(inputValue, softenThreshold, maxThreshold);
+            float linearValue = normalizeBetweenThresholds(inputValue, softenThreshold, maxThreshold)*PI/4;
 
             if (linearValue < PI / 2)
             {
