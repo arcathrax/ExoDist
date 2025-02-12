@@ -23,23 +23,9 @@ struct CustomRotarySlider : juce::Slider
         juce::Slider::TextEntryBoxPosition::NoTextBox
     )
     {
-        setVelocityBasedMode(true);
-        setVelocityModeParameters(1, 1, 0.05, true);
+        setVelocityModeParameters(1, 1, 0.001, true, juce::ModifierKeys::shiftModifier);
     }
-
-    void mouseDrag(const juce::MouseEvent& event) override
-    {
-        if (event.mods.isShiftDown())
-        {
-            setVelocityModeParameters(0.25, 1, 0.02, true);
-        }
-        else
-        {
-            setVelocityModeParameters(1, 1, 0.05, true);
-        }
-
-        juce::Slider::mouseDrag(event);
-    }
+private:
 };
 
 
